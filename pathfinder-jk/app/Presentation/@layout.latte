@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>{ifset title}{include title|stripHtml} | {/ifset}Jižní Kříž Pathfinder</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="{$basePath}/css/style.css">
+
+	{asset? 'main.js'}
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+	{* Navigation *}
+	<nav class="bg-white shadow-sm">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="flex justify-between h-16">
+				<div class="flex items-center">
+					<a n:href="Home:" class="flex items-center space-x-2">
+						<span class="text-2xl font-bold text-primary">Jižní Kříž</span>
+					</a>
+
+					<div class="hidden md:flex md:ml-10 space-x-8">
+						<a n:href="Home:" class="text-gray-600 hover:text-primary font-medium transition">
+							Domů
+						</a>
+						<a n:href="Home:#akce" class="text-gray-600 hover:text-primary font-medium transition">
+							Akce
+						</a>
+						{*
+						<a href="#" class="text-gray-600 hover:text-primary font-medium transition">
+							Novinky
+						</a>
+						<a href="#" class="text-gray-600 hover:text-primary font-medium transition">
+							Galerie
+						</a>
+						<a href="#" class="text-gray-600 hover:text-primary font-medium transition">
+							Kontakt
+						</a>
+						*}
+					</div>
+				</div>
+
+				<div class="flex items-center space-x-4">
+					{if $user->isLoggedIn()}
+						<span class="text-gray-600 hidden sm:block">
+							{$user->identity->full_name}
+						</span>
+						<a n:href="Sign:out" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium px-4 py-2 rounded-xl transition">
+							Odhlásit
+						</a>
+					{else}
+						<a n:href="Sign:in" class="text-gray-600 hover:text-primary font-medium transition">
+							Přihlásit
+						</a>
+						<a n:href="Sign:up" class="bg-primary hover:bg-primary-dark text-white font-medium px-4 py-2 rounded-xl transition">
+							Registrace
+						</a>
+					{/if}
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	{* Flash messages *}
+	{if $flashes}
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+			{foreach $flashes as $flash}
+				<div class="mb-2 px-4 py-3 rounded-xl border
+					{if $flash->type === 'success'}bg-green-50 border-green-200 text-green-800{/if}
+					{if $flash->type === 'error'}bg-red-50 border-red-200 text-red-800{/if}
+					{if $flash->type === 'warning'}bg-yellow-50 border-yellow-200 text-yellow-800{/if}
+					{if $flash->type === 'info'}bg-blue-50 border-blue-200 text-blue-800{/if}
+				">
+					{$flash->message}
+				</div>
+			{/foreach}
+		</div>
+	{/if}
+
+	{* Main content *}
+	<main class="flex-grow">
+		{include content}
+	</main>
+
+	{* Footer *}
+	<footer class="bg-gray-800 text-gray-300 mt-auto">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+			<div class="flex flex-col md:flex-row justify-between items-center">
+				<div class="mb-4 md:mb-0">
+					<span class="text-xl font-bold text-white">Jižní Kříž</span>
+					<p class="text-sm mt-1">Oblast Klubu Pathfinder</p>
+				</div>
+				<div class="text-sm">
+					&copy; {date('Y')} Jižní Kříž Pathfinder
+				</div>
+			</div>
+		</div>
+	</footer>
+</body>
+</html>

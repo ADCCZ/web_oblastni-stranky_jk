@@ -1,0 +1,31 @@
+# Dependencies
+/vendor/
+/node_modules/
+
+# Nette cache and logs
+/temp/
+/log/
+
+# Local config
+/config/local.neon
+
+# IDE
+/.idea/
+/.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+nul
+
+# Claude Code
+/.claude/
+
+# Build artifacts (optional - can be included if needed)
+# /www/assets/
+
+# Environment
+.env
+.env.local
