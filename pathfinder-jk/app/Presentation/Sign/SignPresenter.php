@@ -6,10 +6,10 @@ namespace App\Presentation\Sign;
 
 use App\Forms\SignInFormFactory;
 use App\Forms\SignUpFormFactory;
+use App\Presentation\BasePresenter;
 use Nette\Application\UI\Form;
-use Nette\Application\UI\Presenter;
 
-final class SignPresenter extends Presenter
+final class SignPresenter extends BasePresenter
 {
     public function __construct(
         private SignInFormFactory $signInFormFactory,

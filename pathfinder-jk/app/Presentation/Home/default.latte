@@ -1,21 +1,74 @@
 {block content}
 
-{* Hero Section *}
-<section class="bg-gradient-to-br from-primary to-primary-dark text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-        <div class="text-center">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold font-display mb-6">
-                Vítejte v Jižním Kříži
+{* Hero Section - výška 100vh (celá obrazovka) *}
+<section class="relative" style="height: 100vh; min-height: 600px;">
+    {* Background image *}
+    {* POSUN OBRÁZKU: změň object-position - menší % = víc nahoru (0% = úplně nahoře, 50% = střed, 100% = dole) *}
+    <img
+        src="{$basePath}/images/background.jpg"
+        alt="Pathfinder"
+        class="absolute inset-0 w-full h-full object-cover"
+        style="object-position: center 60%;"
+        onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+    >
+    {* Fallback gradient if no image *}
+    <div class="hidden absolute inset-0 bg-gradient-to-br from-primary to-primary-dark"></div>
+
+    {* Dark overlay *}
+    <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/70"></div>
+
+    {* Content *}
+    {* ODSAZENÍ TLAČÍTEK OD SPODU: změň padding-bottom hodnotu v style *}
+    <div class="absolute inset-0 flex items-end justify-center">
+        <div class="text-center px-4 sm:px-6 lg:px-8" style="padding-bottom: 100px;">
+            <h1 class="text-8xl font-bold font-display mb-0 text-white drop-shadow-lg" style="font-size: clamp(6rem, 12vw, 11rem);">
+                Jižní Kříž
             </h1>
-            <p class="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto mb-10">
-                Oblast Klubu Pathfinder pro mladé dobrodruhy. Zážitky, přátelství a dobrodružství v přírodě.
+            <p class="text-3xl text-white/90 max-w-4xl mx-auto mb-8 drop-shadow-md">
+                Oblast Klubu Pathfinder (nejen) pro mladé dobrodruhy.
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#akce" class="bg-accent hover:bg-accent-hover text-gray-900 font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
+            <div class="flex flex-col sm:flex-row justify-center" style="gap: 20px;">
+                <a href="#akce" class="bg-accent hover:bg-accent-hover text-gray-900 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200" style="padding: 20px 48px; font-size: 1.875rem;">
                     Nadcházející akce
                 </a>
-                <a n:href="Sign:up" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-xl border-2 border-white/30 transition-all duration-200">
+                <a n:href="Sign:up" class="bg-white/20 hover:bg-white/30 text-white font-semibold rounded-xl border-2 border-white/40 backdrop-blur-sm transition-all duration-200" style="padding: 20px 48px; font-size: 1.875rem;">
                     Připojit se k nám
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{* Pathfinder Info Section *}
+<section class="py-12 md:py-16 bg-gray-900">
+    <div class="mx-auto px-8" style="max-width: 1400px;">
+        <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 2rem;">
+            {* Left column - Klub Pathfinder *}
+            <div class="text-center" style="flex-shrink: 0; width: 200px;">
+                <p class="text-white text-lg uppercase tracking-wider mb-4">Klub Pathfinder</p>
+                {* Pathfinder logo *}
+                <a href="https://www.pathfinder.cz/" target="_blank" rel="noopener">
+                    <img src="{$basePath}/images/pathfinder-logo.png" alt="Pathfinder logo" class="mx-auto hover:opacity-80 transition-opacity" style="height: 140px; max-width: 100%;">
+                </a>
+            </div>
+
+            {* Center column - Definition *}
+            <div class="text-center" style="flex: 1; max-width: 550px;">
+                <h2 class="text-4xl md:text-5xl font-bold text-white font-display tracking-wide mb-4">PATHFINDER</h2>
+                <p class="text-gray-400 italic text-lg mb-6">= stopař, zvěd, průzkumník</p>
+                <p class="text-gray-300 leading-relaxed">
+                    Je to ten, kdo jde vždy vpředu, aby našel cestu pro ty, kteří půjdou za ním. Ten, kdo
+                    si umí poradit v každé situaci a nezalekne se žádné překážky. Je to ten, na kterého s
+                    důvěrou spoléhají ti, kteří se nevyznají. Ten, kdo zná cestu a ukazuje ji jiným.
+                </p>
+            </div>
+
+            {* Right column - Oblast Jižní Kříž *}
+            <div class="text-center" style="flex-shrink: 0; width: 200px;">
+                <p class="text-white text-lg uppercase tracking-wider mb-4">Oblast</p>
+                {* Logo Jižního Kříže *}
+                <a n:href="Home:">
+                    <img src="{$basePath}/images/logo.png" alt="Jižní Kříž logo" class="mx-auto hover:opacity-80 transition-opacity" style="height: 140px; max-width: 100%;">
                 </a>
             </div>
         </div>
@@ -28,7 +81,7 @@
         <div class="text-center mb-16">
             <h2 class="text-3xl md:text-4xl font-bold text-gray-900 font-display">Co u nás zažijete</h2>
             <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-                Pathfinder je více než kroužek - je to životní styl plný dobrodružství
+                Pathfinder jsou více než schůzky - je to životní styl plný dobrodružství, poznávání a přátelství.
             </p>
         </div>
 

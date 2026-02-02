@@ -4,11 +4,17 @@ services:
 	# Security
 	security.authenticator: App\Security\Authenticator
 
+	# Components
+	- App\Components\Navbar\NavbarFactory
+
 
 search:
 	-	in: %appDir%
 		classes:
 			- *Facade
-			- *Factory
 			- *Repository
 			- *Service
+
+	-	in: %appDir%/Forms
+		classes:
+			- *Factory
