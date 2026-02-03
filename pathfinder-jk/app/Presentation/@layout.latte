@@ -33,7 +33,7 @@
 			background-color: var(--bg-primary);
 			color: var(--text-primary);
 			transition: background-color 0.3s, color 0.3s;
-			min-width: 320px;
+			min-width: 250px;
 		}
 
 		.nav-font {
@@ -128,14 +128,202 @@
 			box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 		}
 
-		/* Responzivní výška navbaru */
+		/* Responzivní navbar */
+		.desktop-nav {
+			display: none;
+		}
+		.mobile-menu-btn {
+			display: block;
+		}
+		#navbar {
+			margin-left: 16px !important;
+			margin-right: 16px !important;
+		}
 		#navbar > div:first-child {
-			height: 80px;
+			height: 80px !important;
+			padding-left: 16px !important;
+			padding-right: 16px !important;
+		}
+		#navbar-logo {
+			width: 100px !important;
+			height: 100px !important;
+		}
+		#logo-link .logo-ring {
+			padding: 6px;
+		}
+		#logo-link .logo-ring > div {
+			padding: 4px;
+		}
+
+		/* Mobile menu animace */
+		@media (max-width: 1023px) {
+			#logo-link {
+				top: 40px !important;
+				transform: translate(-50%, -50%) !important;
+				transition: left 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+			}
+
+			#logo-link.logo-moved {
+				left: 90px !important;
+				transform: translate(-50%, -50%) rotate(-360deg) !important;
+			}
+		}
+
+		.mobile-menu-closed {
+			max-height: 0;
+			overflow: hidden;
+			opacity: 0;
+			transition: max-height 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease;
+		}
+
+		.mobile-menu-open {
+			max-height: 600px;
+			overflow: hidden;
+			opacity: 1;
+			transition: max-height 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease;
+			padding-bottom: 24px;
+			border-top: 1px solid #f3f4f6;
+			margin: 0 16px;
+		}
+
+		.mobile-menu-links {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+			padding-top: 16px;
+			align-items: center;
+		}
+
+		.mobile-link {
+			padding: 12px 24px;
+			border-radius: 8px;
+			color: #374151;
+			font-size: 1.25rem;
+			font-weight: 600;
+			text-align: center;
+			transition: background-color 0.2s, color 0.2s;
+		}
+
+		.mobile-link:hover {
+			background-color: rgba(0, 117, 181, 0.1);
+			color: #0075b5;
+		}
+
+		.mobile-menu-footer {
+			padding-top: 16px;
+			margin-top: 16px;
+			border-top: 1px solid #f3f4f6;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding-left: 16px;
+			padding-right: 16px;
+			width: 100%;
+			box-sizing: border-box;
+		}
+
+		.mobile-btn {
+			padding: 12px 24px;
+			background-color: #f3f4f6;
+			color: #374151;
+			font-weight: 600;
+			border-radius: 12px;
+			font-size: 1.125rem;
+			transition: background-color 0.2s;
+		}
+
+		.mobile-btn:hover {
+			background-color: #e5e7eb;
+		}
+
+		.mobile-btn-primary {
+			background-color: #005a8c;
+			color: white;
+		}
+
+		.mobile-btn-primary:hover {
+			background-color: #004a73;
 		}
 
 		@media (min-width: 1024px) {
+			.desktop-nav {
+				display: flex;
+			}
+			.mobile-menu-btn {
+				display: none;
+			}
+			#navbar {
+				margin-left: clamp(16px, 2vw, 48px) !important;
+				margin-right: clamp(16px, 2vw, 48px) !important;
+			}
 			#navbar > div:first-child {
-				height: 120px;
+				height: clamp(70px, 6vw, 120px) !important;
+				padding-left: clamp(12px, 1.5vw, 40px) !important;
+				padding-right: clamp(12px, 1.5vw, 40px) !important;
+			}
+			#navbar-logo {
+				width: clamp(80px, 7vw, 144px) !important;
+				height: clamp(80px, 7vw, 144px) !important;
+			}
+			#logo-link .logo-ring {
+				padding: clamp(4px, 0.4vw, 8px);
+			}
+			#logo-link .logo-ring > div {
+				padding: clamp(3px, 0.3vw, 6px);
+			}
+			/* Responzivní text v navbaru */
+			.desktop-nav a {
+				font-size: clamp(0.75rem, 1.3vw, 1.875rem) !important;
+				white-space: nowrap;
+			}
+			/* Responzivní mezery mezi odkazy */
+			.desktop-nav {
+				gap: clamp(10px, 3.7vw, 140px) !important;
+			}
+			/* Odsazení levých odkazů od okraje */
+			.desktop-nav:first-of-type {
+				margin-left: clamp(10px, 1.5vw, 30px) !important;
+			}
+			/* Logo spacer */
+			.logo-spacer {
+				width: clamp(80px, 8vw, 200px) !important;
+			}
+			/* Pravá strana odkazů - margin od loga a menší gap */
+			.desktop-nav-right {
+				margin-left: clamp(40px, 8vw, 250px) !important;
+				gap: clamp(10px, 3vw, 250px) !important;
+				margin-right: clamp(10px, 1.5vw, 200px) !important;
+			}
+			/* Akce sekce - gap mezi toggle a tlačítkem */
+			.desktop-nav-actions {
+				gap: clamp(8px, 1vw, 200px) !important;
+			}
+			/* Responzivní toggle switch */
+			.desktop-nav-actions .toggle-switch {
+				transform: scale(1);
+				transform-origin: center;
+			}
+		}
+
+		/* Menší toggle a tlačítko na užších obrazovkách */
+		@media (min-width: 1024px) and (max-width: 1400px) {
+			.desktop-nav-actions .toggle-switch {
+				transform: scale(0.75);
+			}
+		}
+
+		@media (min-width: 1024px) and (max-width: 1200px) {
+			.desktop-nav-actions .toggle-switch {
+				transform: scale(0.65);
+			}
+		}
+
+		/* Tlačítko přihlásit/odhlásit - vždy na desktopu */
+		@media (min-width: 1024px) {
+			.nav-btn {
+				font-size: clamp(0.65rem, 0.9vw, 1.5rem) !important;
+				padding: clamp(4px, 0.5vw, 12px) clamp(8px, 1vw, 32px) !important;
+				margin-right: clamp(4px, 0.5vw, 20px) !important;
 			}
 		}
 
