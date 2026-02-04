@@ -1,0 +1,53 @@
+{block content}
+<div class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+            {* Back to home *}
+            <a n:href="Home:" class="auth-home-btn" title="Zpět na hlavní stránku">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+            </a>
+
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <img src="{$basePath}/images/logo.png" alt="Jižní Kříž">
+                </div>
+                <h1 class="auth-title font-display">Ověřovací kód</h1>
+                <p class="auth-subtitle">Zadejte 6-místný kód odeslaný na {$email}</p>
+            </div>
+
+            {form verifyForm}
+                <div class="auth-form-group">
+                    <label class="auth-label" for="frm-verifyForm-code">Ověřovací kód</label>
+                    <input n:name="code" class="auth-input verification-code-input" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
+                </div>
+
+                {if $form->hasErrors()}
+                    <div class="auth-error">
+                        <ul>
+                            {foreach $form->errors as $error}
+                                <li>{$error}</li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                {/if}
+
+                <button n:name="verify" class="auth-submit-btn">
+                    Ověřit kód
+                </button>
+            {/form}
+
+            <div class="auth-footer">
+                <p class="auth-footer-text">
+                    Nepřišel vám kód?
+                    <a n:href="resendCode!" class="auth-footer-link">Odeslat znovu</a>
+                </p>
+                <p class="auth-footer-text" style="margin-top: 12px;">
+                    <a n:href="Password:reset" class="auth-footer-link">Zadat jiný email</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}

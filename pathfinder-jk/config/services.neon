@@ -4,6 +4,14 @@ services:
 	# Security
 	security.authenticator: App\Security\Authenticator
 
+	# OAuth
+	- App\Security\OAuthService(%oauth%)
+	- App\Security\OAuthAuthenticator
+
+	# Mail
+	- App\Services\MailService
+	- App\Services\TotpService
+
 	# Components
 	- App\Components\Navbar\NavbarFactory
 

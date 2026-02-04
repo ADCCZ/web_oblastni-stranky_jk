@@ -1,0 +1,50 @@
+{block content}
+<div class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+            {* Back to home *}
+            <a n:href="Home:" class="auth-home-btn" title="Zpět na hlavní stránku">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+            </a>
+
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <img src="{$basePath}/images/logo.png" alt="Jižní Kříž">
+                </div>
+                <h1 class="auth-title font-display">Obnova hesla</h1>
+                <p class="auth-subtitle">Zadejte svůj e-mail pro obnovení hesla</p>
+            </div>
+
+            {form emailForm}
+                <div class="auth-form-group">
+                    <label class="auth-label" for="frm-emailForm-email">E-mail</label>
+                    <input n:name="email" class="auth-input" placeholder="vas@email.cz" {if isset($userEmail)}value="{$userEmail}"{/if}>
+                </div>
+
+                {if $form->hasErrors()}
+                    <div class="auth-error">
+                        <ul>
+                            {foreach $form->errors as $error}
+                                <li>{$error}</li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                {/if}
+
+                <button n:name="send" class="auth-submit-btn">
+                    Odeslat ověřovací kód
+                </button>
+            {/form}
+
+            <div class="auth-footer">
+                <p class="auth-footer-text">
+                    Vzpomněli jste si na heslo?
+                    <a n:href="Sign:in" class="auth-footer-link">Přihlaste se</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}

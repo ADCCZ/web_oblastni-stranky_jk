@@ -55,6 +55,13 @@ final class SignUpFormFactory
             ->setHtmlAttribute('placeholder', 'Zopakujte heslo')
             ->setHtmlAttribute('class', 'form-input');
 
+        $form->addCheckbox('newsletter', 'Chci dostávat novinky e-mailem')
+            ->setHtmlAttribute('class', 'form-checkbox');
+
+        $form->addCheckbox('terms', 'Souhlasím s podmínkami užití a zpracováním osobních údajů')
+            ->setRequired('Pro registraci musíte souhlasit s podmínkami.')
+            ->setHtmlAttribute('class', 'form-checkbox');
+
         $form->addSubmit('send', 'Zaregistrovat se')
             ->setHtmlAttribute('class', 'btn-primary');
 
@@ -74,6 +81,7 @@ final class SignUpFormFactory
                 'phone' => $data->phone ?: null,
                 'role' => 'member',
                 'is_active' => true,
+                'newsletter' => $data->newsletter ? 1 : 0,
             ]);
 
             // Auto-login after registration

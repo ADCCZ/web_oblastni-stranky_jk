@@ -1,0 +1,88 @@
+{block content}
+
+<section class="auth-section auth-page">
+    <div class="auth-container">
+        <div class="auth-card scroll-reveal">
+            {* Back to home *}
+            <a n:href="Home:" class="auth-home-btn" title="Zpět na hlavní stránku">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+            </a>
+
+            {* Logo *}
+            <div class="auth-logo">
+                <img src="{$basePath}/images/logo.png" alt="Pathfinder JK">
+            </div>
+
+            {* Title *}
+            <h1 class="auth-title font-display">Dvoufázové ověření</h1>
+            <p class="auth-subtitle">
+                {if $twoFactorType === 'email'}
+                    Zadejte 6-místný kód, který jsme odeslali na <strong>{$userEmail}</strong>
+                {elseif $twoFactorType === 'totp'}
+                    Zadejte 6-místný kód z vaší authenticator aplikace
+                {else}
+                    Zadejte ověřovací kód
+                {/if}
+            </p>
+
+            {* Flash messages *}
+            {foreach $flashes as $flash}
+                <div class="auth-flash auth-flash-{$flash->type}">
+                    {$flash->message}
+                </div>
+            {/foreach}
+
+            {* 2FA Form *}
+            {form twoFactorForm}
+                <div class="auth-form-group">
+                    <label class="auth-label" for="frm-twoFactorForm-code">Ověřovací kód</label>
+                    <div class="auth-input-wrapper">
+                        <svg class="auth-input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        <input n:name="code" class="auth-input verification-code-input" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="one-time-code" autofocus>
+                    </div>
+                </div>
+
+                {if $form->hasErrors()}
+                    <div class="auth-error">
+                        <ul>
+                            {foreach $form->errors as $error}
+                                <li>{$error}</li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                {/if}
+
+                <button n:name="verify" class="auth-submit">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                    Ověřit
+                </button>
+            {/form}
+
+            {* Resend code option for email *}
+            {if $twoFactorType === 'email'}
+                <div class="auth-options">
+                    <p class="auth-options-text">Nedorazil vám kód?</p>
+                    <a n:href="resendCode!" class="auth-link">Odeslat znovu</a>
+                </div>
+            {/if}
+
+            {* Back to login *}
+            <div class="auth-footer">
+                <a n:href="Sign:in" class="auth-back-link">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Zpět na přihlášení
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{/block}

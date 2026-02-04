@@ -1,0 +1,93 @@
+{block content}
+
+<section class="profile-section">
+    <div class="profile-container">
+        {* Header *}
+        <div class="profile-header scroll-reveal">
+            <div class="profile-avatar">
+                <div class="profile-avatar-placeholder" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="profile-info">
+                <h1 class="profile-name font-display">Nastavení Authenticatoru</h1>
+                <p class="profile-email">Propojte svou authenticator aplikaci</p>
+                <a n:href="Profile:security" class="profile-back-link">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Zpět na zabezpečení
+                </a>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            {* Step 1: QR Code *}
+            <div class="profile-card scroll-reveal">
+                <div class="profile-card-header">
+                    <h2 class="profile-card-title">
+                        <span class="step-number">1</span>
+                        Naskenujte QR kód
+                    </h2>
+                </div>
+                <div class="profile-card-body">
+                    <p class="setup-instruction">
+                        Otevřete svou authenticator aplikaci (Google Authenticator, Microsoft Authenticator, Authy, ...)
+                        a naskenujte tento QR kód:
+                    </p>
+                    <div class="qr-code-container">
+                        {* QR kód pomocí Google Charts API *}
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={$qrUrl|escapeUrl}" alt="QR kód pro authenticator" class="qr-code">
+                    </div>
+                    <p class="setup-alternative">
+                        Nebo zadejte kód ručně:
+                    </p>
+                    <div class="secret-code">
+                        <code>{$secret}</code>
+                        <button type="button" class="copy-btn" onclick="navigator.clipboard.writeText('{$secret}'); this.textContent='Zkopírováno!'">
+                            Kopírovat
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {* Step 2: Verify *}
+            <div class="profile-card scroll-reveal">
+                <div class="profile-card-header">
+                    <h2 class="profile-card-title">
+                        <span class="step-number">2</span>
+                        Ověřte kód
+                    </h2>
+                </div>
+                <div class="profile-card-body">
+                    <p class="setup-instruction">
+                        Zadejte 6-místný kód z vaší authenticator aplikace pro dokončení nastavení:
+                    </p>
+                    {form totpVerifyForm}
+                        <div class="auth-form-group">
+                            <input n:name="code" class="auth-input verification-code-input" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
+                        </div>
+
+                        {if $form->hasErrors()}
+                            <div class="auth-error">
+                                <ul>
+                                    {foreach $form->errors as $error}
+                                        <li>{$error}</li>
+                                    {/foreach}
+                                </ul>
+                            </div>
+                        {/if}
+
+                        <button n:name="verify" class="profile-form-submit">
+                            Ověřit a aktivovat
+                        </button>
+                    {/form}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{/block}

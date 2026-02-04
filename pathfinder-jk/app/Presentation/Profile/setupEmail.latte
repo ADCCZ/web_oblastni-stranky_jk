@@ -1,0 +1,92 @@
+{block content}
+
+<section class="profile-section">
+    <div class="profile-container">
+        {* Header *}
+        <div class="profile-header scroll-reveal">
+            <div class="profile-avatar">
+                <div class="profile-avatar-placeholder" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="profile-info">
+                <h1 class="profile-name font-display">Ověření e-mailu</h1>
+                <p class="profile-email">Ověřte svůj e-mail pro aktivaci 2FA</p>
+                <a n:href="Profile:security" class="profile-back-link">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Zpět na zabezpečení
+                </a>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            {* Verification Card *}
+            <div class="profile-card scroll-reveal">
+                <div class="profile-card-header">
+                    <h2 class="profile-card-title">
+                        <span class="step-number">1</span>
+                        Zadejte ověřovací kód
+                    </h2>
+                </div>
+                <div class="profile-card-body">
+                    <p class="setup-instruction">
+                        Na váš e-mail <strong>{$profile->email}</strong> jsme odeslali 6-místný ověřovací kód.
+                        Zadejte ho níže pro aktivaci dvoufázového ověření.
+                    </p>
+
+                    {form emailVerifyForm}
+                        <div class="auth-form-group">
+                            <input n:name="code" class="auth-input verification-code-input" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="one-time-code" autofocus>
+                        </div>
+
+                        {if $form->hasErrors()}
+                            <div class="auth-error">
+                                <ul>
+                                    {foreach $form->errors as $error}
+                                        <li>{$error}</li>
+                                    {/foreach}
+                                </ul>
+                            </div>
+                        {/if}
+
+                        <button n:name="verify" class="profile-form-submit">
+                            Ověřit a aktivovat
+                        </button>
+                    {/form}
+
+                    <div class="auth-options" style="margin-top: 1.5rem; text-align: center;">
+                        <p class="auth-options-text">Nedorazil vám kód?</p>
+                        <a n:href="resendSetupCode!" class="auth-link">Odeslat znovu</a>
+                    </div>
+                </div>
+            </div>
+
+            {* Info Card *}
+            <div class="profile-card scroll-reveal">
+                <div class="profile-card-header">
+                    <h2 class="profile-card-title">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Jak to funguje?
+                    </h2>
+                </div>
+                <div class="profile-card-body">
+                    <p class="setup-instruction">
+                        Po aktivaci dvoufázového ověření přes e-mail vám při každém přihlášení odešleme
+                        jednorázový kód na váš e-mail. Tento kód budete muset zadat pro dokončení přihlášení.
+                    </p>
+                    <p class="setup-instruction" style="margin-top: 1rem; color: var(--text-gray);">
+                        <strong>Tip:</strong> Toto nastavení je volitelné a můžete ho kdykoli vypnout v nastavení zabezpečení.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{/block}

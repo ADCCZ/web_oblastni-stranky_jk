@@ -19,7 +19,11 @@
 		"nette/security": "^3.2",
 		"nette/utils": "^4.0",
 		"latte/latte": "^3.1",
-		"tracy/tracy": "^2.10"
+		"tracy/tracy": "^2.10",
+		"league/oauth2-google": "^4.1",
+		"league/oauth2-facebook": "^2.2",
+		"wohali/oauth2-discord-new": "^1.2",
+		"league/oauth2-instagram": "^3.1"
 	},
 	"require-dev": {
 		"nette/tester": "^2.5",

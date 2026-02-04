@@ -29,6 +29,17 @@ assets:
 			# type: vite  # Uncomment to activate Vite for asset building
 
 
+mail:
+	# Pro vývoj - SMTP na localhost (např. MailHog, Papercut, nebo XAMPP sendmail)
+	# Pro produkci nastavte v local.neon s reálným SMTP serverem
+	smtp: yes
+	host: localhost
+	port: 25
+	# secure: ssl
+	# username:
+	# password:
+
+
 di:
 	export:
 		parameters: no

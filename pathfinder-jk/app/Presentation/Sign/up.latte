@@ -1,80 +1,103 @@
 {block content}
-<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full">
-        <div class="bg-white rounded-2xl shadow-lg p-8">
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Registrace</h1>
-                <p class="mt-2 text-gray-600">Připojte se k Jižnímu Kříži</p>
+<div class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+            {* Back to home *}
+            <a n:href="Home:" class="auth-home-btn" title="Zpět na hlavní stránku">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+            </a>
+
+            {* Header with logo *}
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <img src="{$basePath}/images/logo.png" alt="Jižní Kříž">
+                </div>
+                <h1 class="auth-title font-display">Registrace</h1>
+                <p class="auth-subtitle">Připojte se k Jižnímu Kříži</p>
             </div>
 
+            {* Registration Form *}
             {form signUpForm}
-                <div class="space-y-5">
-                    <div class="grid grid-cols-2 gap-4">
+                {* Name fields *}
+                <div class="auth-form-group">
+                    <div class="auth-form-row">
                         <div>
-                            <label for="frm-signUpForm-first_name" class="block text-sm font-medium text-gray-700 mb-1">
-                                Jméno
-                            </label>
-                            <input n:name="first_name" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                            <label class="auth-label" for="frm-signUpForm-first_name">Jméno</label>
+                            <input n:name="first_name" class="auth-input" placeholder="Jan">
                         </div>
                         <div>
-                            <label for="frm-signUpForm-last_name" class="block text-sm font-medium text-gray-700 mb-1">
-                                Příjmení
-                            </label>
-                            <input n:name="last_name" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                            <label class="auth-label" for="frm-signUpForm-last_name">Příjmení</label>
+                            <input n:name="last_name" class="auth-input" placeholder="Novák">
                         </div>
                     </div>
-
-                    <div>
-                        <label for="frm-signUpForm-email" class="block text-sm font-medium text-gray-700 mb-1">
-                            E-mail
-                        </label>
-                        <input n:name="email" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
-                    </div>
-
-                    <div>
-                        <label for="frm-signUpForm-phone" class="block text-sm font-medium text-gray-700 mb-1">
-                            Telefon <span class="text-gray-400">(nepovinné)</span>
-                        </label>
-                        <input n:name="phone" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
-                    </div>
-
-                    <div>
-                        <label for="frm-signUpForm-password" class="block text-sm font-medium text-gray-700 mb-1">
-                            Heslo
-                        </label>
-                        <input n:name="password" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
-                        <p class="mt-1 text-sm text-gray-500">Minimálně 8 znaků</p>
-                    </div>
-
-                    <div>
-                        <label for="frm-signUpForm-password_confirm" class="block text-sm font-medium text-gray-700 mb-1">
-                            Heslo znovu
-                        </label>
-                        <input n:name="password_confirm" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
-                    </div>
-
-                    {if $form->hasErrors()}
-                        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
-                            <ul class="list-disc list-inside">
-                                {foreach $form->errors as $error}
-                                    <li>{$error}</li>
-                                {/foreach}
-                            </ul>
-                        </div>
-                    {/if}
-
-                    <button n:name="send" class="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-6 rounded-xl transition-colors duration-200">
-                        Zaregistrovat se
-                    </button>
                 </div>
+
+                {* Email *}
+                <div class="auth-form-group">
+                    <label class="auth-label" for="frm-signUpForm-email">E-mail</label>
+                    <input n:name="email" class="auth-input" placeholder="vas@email.cz">
+                </div>
+
+                {* Phone *}
+                <div class="auth-form-group">
+                    <label class="auth-label" for="frm-signUpForm-phone">
+                        Telefon <span class="auth-label-optional">(nepovinné)</span>
+                    </label>
+                    <input n:name="phone" class="auth-input" placeholder="+420 123 456 789">
+                </div>
+
+                {* Password *}
+                <div class="auth-form-group">
+                    <label class="auth-label" for="frm-signUpForm-password">Heslo</label>
+                    <input n:name="password" class="auth-input" placeholder="Minimálně 8 znaků">
+                    <p class="auth-input-hint">Heslo musí mít alespoň 8 znaků</p>
+                </div>
+
+                {* Password Confirm *}
+                <div class="auth-form-group">
+                    <label class="auth-label" for="frm-signUpForm-password_confirm">Heslo znovu</label>
+                    <input n:name="password_confirm" class="auth-input" placeholder="Zopakujte heslo">
+                </div>
+
+                {* Checkboxes *}
+                <div class="auth-checkbox-group">
+                    <label class="auth-checkbox-label">
+                        <input n:name="newsletter" type="checkbox" class="auth-checkbox">
+                        <span>Chci odebírat novinky a informace o akcích e-mailem</span>
+                    </label>
+                </div>
+
+                <div class="auth-checkbox-group">
+                    <label class="auth-checkbox-label">
+                        <input n:name="terms" type="checkbox" class="auth-checkbox">
+                        <span>Souhlasím s <a href="#" target="_blank">podmínkami použití</a> a <a href="#" target="_blank">zpracováním osobních údajů</a></span>
+                    </label>
+                </div>
+
+                {* Error messages *}
+                {if $form->hasErrors()}
+                    <div class="auth-error">
+                        <ul>
+                            {foreach $form->errors as $error}
+                                <li>{$error}</li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                {/if}
+
+                {* Submit *}
+                <button n:name="send" class="auth-submit-btn">
+                    Zaregistrovat se
+                </button>
             {/form}
 
-            <div class="mt-6 text-center">
-                <p class="text-gray-600">
+            {* Footer *}
+            <div class="auth-footer">
+                <p class="auth-footer-text">
                     Už máte účet?
-                    <a n:href="Sign:in" class="text-primary hover:text-primary-dark font-semibold">
-                        Přihlaste se
-                    </a>
+                    <a n:href="Sign:in" class="auth-footer-link">Přihlaste se</a>
                 </p>
             </div>
         </div>
