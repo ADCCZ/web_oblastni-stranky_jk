@@ -13,6 +13,8 @@ final class Navbar extends Control
         $this->template->setFile(__DIR__ . '/Navbar.latte');
         $this->template->user = $this->getPresenter()->getUser();
         $this->template->basePath = $this->getPresenter()->template->basePath;
+        $this->template->presenter = $this->getPresenter();
+        $this->template->isHomepage = $this->getPresenter()->isLinkCurrent('Home:default');
         $this->template->render();
     }
 }
