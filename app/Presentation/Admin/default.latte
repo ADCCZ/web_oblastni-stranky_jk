@@ -1,0 +1,183 @@
+{block content}
+
+<section class="admin-section">
+    <div class="admin-container">
+        {* Header *}
+        <div class="admin-header scroll-reveal">
+            <div class="admin-header-content">
+                <h1 class="admin-title font-display">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                    Dashboard
+                </h1>
+                <a n:href="Profile:" class="admin-back-link">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Zpět na profil
+                </a>
+            </div>
+        </div>
+
+        {* Stats *}
+        <div class="admin-stats scroll-reveal">
+            {var $totalUsers = count($users)}
+            {var $activeUsers = 0}
+            {var $leaderCount = 0}
+            {foreach $users as $u}
+                {if $u->is_active}{var $activeUsers = $activeUsers + 1}{/if}
+                {if $u->role === 'leader'}{var $leaderCount = $leaderCount + 1}{/if}
+            {/foreach}
+            <div class="admin-stat-card">
+                <div class="stat-number">{$totalUsers}</div>
+                <div class="stat-label">Celkem uživatelů</div>
+            </div>
+            <div class="admin-stat-card">
+                <div class="stat-number">{$activeUsers}</div>
+                <div class="stat-label">Aktivních</div>
+            </div>
+            <div class="admin-stat-card">
+                <div class="stat-number">{$leaderCount}</div>
+                <div class="stat-label">Vedoucích</div>
+            </div>
+        </div>
+
+        {* Users Card *}
+        <div class="profile-card scroll-reveal">
+            <div class="profile-card-header">
+                <h2 class="profile-card-title">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    Správa uživatelů
+                </h2>
+            </div>
+            <div class="profile-card-body" style="padding: 0;">
+                {* Desktop table *}
+                <div class="admin-table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Uživatel</th>
+                                <th>E-mail</th>
+                                <th>Role</th>
+                                <th>Stav</th>
+                                <th>Akce</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {foreach $users as $u}
+                                <tr class="{if !$u->is_active}admin-row-inactive{/if}">
+                                    <td class="admin-cell-user" data-label="">
+                                        <div class="admin-user-avatar">
+                                            {if $u->avatar_path}
+                                                <img src="{$basePath}/{$u->avatar_path}" alt="">
+                                            {else}
+                                                <span>{$u->first_name|slice:0,1}{$u->last_name|slice:0,1}</span>
+                                            {/if}
+                                        </div>
+                                        <div>
+                                            <div class="admin-user-name">{$u->first_name} {$u->last_name}</div>
+                                            <div class="admin-user-date">Registrace: {$u->created_at|date:'j. n. Y'}</div>
+                                        </div>
+                                    </td>
+                                    <td data-label="E-mail">{$u->email}</td>
+                                    <td data-label="Role">
+                                        <span class="profile-role role-{$u->role}" style="font-size: 0.75rem; padding: 4px 12px;">
+                                            {if $u->role === 'admin'}Admin{elseif $u->role === 'leader'}Vedoucí{elseif $u->role === 'parent'}Rodič{else}Člen{/if}
+                                        </span>
+                                    </td>
+                                    <td data-label="Stav">
+                                        {if $u->is_active}
+                                            <span class="admin-status admin-status-active">Aktivní</span>
+                                        {else}
+                                            <span class="admin-status admin-status-inactive">Neaktivní</span>
+                                        {/if}
+                                    </td>
+                                    <td data-label="Akce">
+                                        <div class="admin-actions">
+                                            <a n:href="Admin:detail, id => $u->id" class="admin-detail-btn" title="Detail uživatele">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                                </svg>
+                                            </a>
+                                            <div n:if="$u->role !== 'admin' && $u->id !== $currentUserId" class="custom-select"
+                                                    data-original="{$u->role}"
+                                                    data-url-member="{link changeRole!, userId => $u->id, role => 'member'}"
+                                                    data-url-parent="{link changeRole!, userId => $u->id, role => 'parent'}"
+                                                    data-url-leader="{link changeRole!, userId => $u->id, role => 'leader'}"
+                                                    data-name="{$u->first_name} {$u->last_name}">
+                                                    <button type="button" class="custom-select-trigger" onclick="toggleSelect(this)">
+                                                        <span>{if $u->role === 'member'}Člen{elseif $u->role === 'parent'}Rodič{else}Vedoucí{/if}</span>
+                                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                                    </button>
+                                                    <div class="custom-select-dropdown">
+                                                        <div class="custom-select-option {if $u->role === 'member'}selected{/if}" data-value="member" onclick="selectOption(this)">Člen</div>
+                                                        <div class="custom-select-option {if $u->role === 'parent'}selected{/if}" data-value="parent" onclick="selectOption(this)">Rodič</div>
+                                                        <div class="custom-select-option {if $u->role === 'leader'}selected{/if}" data-value="leader" onclick="selectOption(this)">Vedoucí</div>
+                                                    </div>
+                                                </div>
+                                                <a n:if="$u->role !== 'admin' && $u->id !== $currentUserId"
+                                                   n:href="toggleActive!, userId => $u->id"
+                                                   class="admin-toggle-btn {if $u->is_active}admin-btn-deactivate{else}admin-btn-activate{/if}"
+                                                   onclick="return confirm('{if $u->is_active}Deaktivovat uživatele {$u->first_name} {$u->last_name}?{else}Aktivovat uživatele {$u->first_name} {$u->last_name}?{/if}')"
+                                                   title="{if $u->is_active}Deaktivovat{else}Aktivovat{/if}">
+                                                    {if $u->is_active}
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                                                        </svg>
+                                                    {else}
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                    {/if}
+                                                </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {/foreach}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function toggleSelect(trigger) {
+    var wrap = trigger.closest('.custom-select');
+    var isOpen = wrap.classList.contains('open');
+    // Zavři všechny ostatní
+    document.querySelectorAll('.custom-select.open').forEach(function(s) { s.classList.remove('open'); });
+    if (!isOpen) wrap.classList.add('open');
+}
+
+function selectOption(option) {
+    var wrap = option.closest('.custom-select');
+    var newRole = option.dataset.value;
+    var original = wrap.dataset.original;
+    wrap.classList.remove('open');
+
+    if (newRole === original) return;
+
+    var roleNames = { 'leader': 'Vedoucí', 'parent': 'Rodič', 'member': 'Člen' };
+    var roleName = roleNames[newRole] || newRole;
+    if (!confirm('Změnit roli uživatele ' + wrap.dataset.name + ' na ' + roleName + '?')) return;
+
+    var urls = { 'leader': wrap.dataset.urlLeader, 'parent': wrap.dataset.urlParent, 'member': wrap.dataset.urlMember };
+    var url = urls[newRole];
+    window.location.href = url;
+}
+
+// Zavři dropdown kliknutím mimo
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.custom-select')) {
+        document.querySelectorAll('.custom-select.open').forEach(function(s) { s.classList.remove('open'); });
+    }
+});
+</script>
+
+{/block}

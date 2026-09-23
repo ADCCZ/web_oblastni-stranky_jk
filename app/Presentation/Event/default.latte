@@ -1,0 +1,187 @@
+{block content}
+
+<section class="events-page-section">
+    <div class="events-container">
+        {* Header *}
+        <div class="events-page-header scroll-reveal">
+            <h1 class="events-page-title font-display text-gray-900 dark:text-white">Akce</h1>
+            <p class="events-subtitle text-gray-600 dark:text-gray-300">Nadcházející i proběhlé akce naší oblasti</p>
+        </div>
+
+        {* Category filters + add button *}
+        <div class="event-filters-row scroll-reveal">
+            <div class="event-filters">
+                <a n:href="Event:default"
+                   class="event-filter-btn {if !$activeCategory}active{/if}">
+                    Vše
+                </a>
+                {foreach $categories as $cat}
+                    <a n:href="Event:default, category => $cat->id"
+                       class="event-filter-btn {if $activeCategory == $cat->id}active{/if}"
+                       style="{if $activeCategory == $cat->id}background-color: {$cat->color|noescape}; color: white; border-color: {$cat->color|noescape};{/if}">
+                        {$cat->name}
+                    </a>
+                {/foreach}
+            </div>
+
+            {if $canManage}
+                <a n:href="Event:add" class="event-add-btn">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Přidat akci
+                </a>
+            {/if}
+        </div>
+
+        {* Upcoming events *}
+        <div class="events-page-block scroll-reveal">
+            <h2 class="events-block-title font-display text-gray-900 dark:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                Nadcházející akce
+            </h2>
+
+            {if $upcomingEvents && count($upcomingEvents) > 0}
+                <div class="events-grid scroll-reveal-children">
+                    {foreach $upcomingEvents as $event}
+                        <a n:href="Event:show, slug => $event->slug" class="event-card-link">
+                            <article class="event-card scroll-reveal bg-gray-50 dark:bg-gray-800">
+                                {if $event->image_path && !str_ends_with($event->image_path, '.pdf')}
+                                    <div class="event-image">
+                                        <img src="{$basePath}/{$event->image_path}" alt="{$event->title}">
+                                    </div>
+                                {elseif $event->image_path && str_ends_with($event->image_path, '.pdf')}
+                                    <div class="event-image">
+                                        <canvas data-pdf-src="{$basePath}/{$event->image_path}"></canvas>
+                                    </div>
+                                {else}
+                                    <div class="event-image bg-gradient-to-br from-primary-light to-primary">
+                                        <span class="text-white/30">
+                                            <svg class="w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                            </svg>
+                                        </span>
+                                    </div>
+                                {/if}
+                                <div class="event-content">
+                                    <div class="event-card-title-row">
+                                        <h3 class="event-title text-gray-900 dark:text-white">{$event->title}</h3>
+                                        {if $event->category}
+                                            <span class="event-title-badge" style="background: {$event->category->color|noescape};">{$event->category->name}</span>
+                                        {/if}
+                                        {if $event->availability === 'leaders'}
+                                            <span class="event-availability-badge">Pro vůdce</span>
+                                        {else}
+                                            <span class="event-availability-badge-all">Pro děti</span>
+                                        {/if}
+                                    </div>
+                                    <p class="event-description text-gray-600 dark:text-gray-300">{$event->description}</p>
+                                    <div class="event-meta text-gray-500 dark:text-gray-400">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                        {$event->start_date|date:'j. n. Y'}
+                                        {if $event->location}
+                                            <span class="mx-2">|</span>
+                                            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            </svg>
+                                            {$event->location}
+                                        {/if}
+                                    </div>
+                                </div>
+                            </article>
+                        </a>
+                    {/foreach}
+                </div>
+            {else}
+                <div class="events-empty scroll-reveal bg-gray-50 dark:bg-gray-800">
+                    <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Žádné nadcházející akce</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Momentálně nemáme naplánované žádné akce. Sledujte nás!</p>
+                </div>
+            {/if}
+        </div>
+
+        {* Past events *}
+        <div class="events-page-block past-events-block scroll-reveal">
+            <h2 class="events-block-title font-display text-gray-900 dark:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Proběhlé akce
+            </h2>
+
+            {if $pastEvents && count($pastEvents) > 0}
+                <div class="events-grid scroll-reveal-children">
+                    {foreach $pastEvents as $event}
+                        <a n:href="Event:show, slug => $event->slug" class="event-card-link">
+                            <article class="event-card event-card-past scroll-reveal bg-gray-50 dark:bg-gray-800">
+                                {if $event->image_path && !str_ends_with($event->image_path, '.pdf')}
+                                    <div class="event-image">
+                                        <img src="{$basePath}/{$event->image_path}" alt="{$event->title}">
+                                    </div>
+                                {elseif $event->image_path && str_ends_with($event->image_path, '.pdf')}
+                                    <div class="event-image">
+                                        <canvas data-pdf-src="{$basePath}/{$event->image_path}"></canvas>
+                                    </div>
+                                {else}
+                                    <div class="event-image bg-gradient-to-br from-gray-400 to-gray-500">
+                                        <span class="text-white/30">
+                                            <svg class="w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                            </svg>
+                                        </span>
+                                    </div>
+                                {/if}
+                                <div class="event-content">
+                                    <div class="event-card-title-row">
+                                        <h3 class="event-title text-gray-900 dark:text-white">{$event->title}</h3>
+                                        {if $event->category}
+                                            <span class="event-title-badge" style="background: {$event->category->color|noescape};">{$event->category->name}</span>
+                                        {/if}
+                                        {if $event->availability === 'leaders'}
+                                            <span class="event-availability-badge">Pro vůdce</span>
+                                        {else}
+                                            <span class="event-availability-badge-all">Pro děti</span>
+                                        {/if}
+                                    </div>
+                                    <p class="event-description text-gray-600 dark:text-gray-300">{$event->description}</p>
+                                    <div class="event-meta text-gray-500 dark:text-gray-400">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                        {$event->start_date|date:'j. n. Y'}
+                                        {if $event->location}
+                                            <span class="mx-2">|</span>
+                                            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            </svg>
+                                            {$event->location}
+                                        {/if}
+                                    </div>
+                                </div>
+                            </article>
+                        </a>
+                    {/foreach}
+                </div>
+            {else}
+                <div class="events-empty scroll-reveal bg-gray-50 dark:bg-gray-800">
+                    <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Žádné proběhlé akce</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Zatím nemáme žádné proběhlé akce.</p>
+                </div>
+            {/if}
+        </div>
+    </div>
+</section>
+
+{/block}

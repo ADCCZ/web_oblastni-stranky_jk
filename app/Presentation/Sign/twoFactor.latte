@@ -1,0 +1,78 @@
+{block content}
+
+<div class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+            {* Back to home *}
+            <a n:href="Home:" class="auth-home-btn" title="Zpět na hlavní stránku">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+            </a>
+
+            {* Back to login *}
+            <a n:href="Sign:in" class="auth-back-btn" title="Zpět na přihlášení">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+            </a>
+
+            {* Logo *}
+            <div class="auth-logo auth-logo-lg">
+                <img src="{$basePath}/images/logo.png" alt="Pathfinder JK">
+            </div>
+
+            {* Title *}
+            <h1 class="auth-title font-display">Dvoufázové ověření</h1>
+            <p class="auth-subtitle">
+                {if $twoFactorType === 'email'}
+                    Zadejte 6-místný kód, který jsme odeslali na <strong>{$userEmail}</strong>
+                {elseif $twoFactorType === 'totp'}
+                    Zadejte 6-místný kód z vaší authenticator aplikace
+                {else}
+                    Zadejte ověřovací kód
+                {/if}
+            </p>
+
+            {* Flash messages *}
+            {foreach $flashes as $flash}
+                <div class="auth-flash auth-flash-{$flash->type}">
+                    {$flash->message}
+                </div>
+            {/foreach}
+
+            {* 2FA Form *}
+            {form twoFactorForm}
+                <div class="auth-form-group">
+                    <label class="auth-label" for="frm-twoFactorForm-code">Ověřovací kód</label>
+                    <input n:name="code" class="auth-input verification-code-input" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="one-time-code" autofocus>
+                </div>
+
+                {if $form->hasErrors()}
+                    <div class="auth-error">
+                        <ul>
+                            {foreach $form->errors as $error}
+                                <li>{$error}</li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                {/if}
+
+                <button n:name="verify" class="auth-submit-btn">
+                    Ověřit
+                </button>
+            {/form}
+
+            {* Resend code option for email *}
+            {if $twoFactorType === 'email'}
+                <div class="auth-resend">
+                    <span class="auth-resend-text">Nedorazil vám kód?</span>
+                    <a n:href="resendCode!" class="auth-resend-link">Odeslat znovu</a>
+                </div>
+            {/if}
+
+        </div>
+    </div>
+</div>
+
+{/block}

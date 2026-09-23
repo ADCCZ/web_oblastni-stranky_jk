@@ -1,0 +1,221 @@
+{block content}
+
+<section class="admin-section">
+    <div class="admin-container" style="max-width: 800px;">
+        {* Header *}
+        <div class="admin-header scroll-reveal">
+            <div class="admin-header-content">
+                <h1 class="admin-title font-display">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    Detail uživatele
+                </h1>
+                <a n:href="Admin:" class="admin-back-link">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Zpět na seznam
+                </a>
+            </div>
+        </div>
+
+        <div class="profile-content">
+        {* User header card *}
+        <div class="profile-card scroll-reveal" style="overflow: visible;">
+            <div class="profile-card-body">
+                <div class="admin-detail-header">
+                    <div class="admin-detail-avatar">
+                        {if $detail->avatar_path}
+                            <img src="{$basePath}/{$detail->avatar_path}" alt="">
+                        {else}
+                            <span>{$detail->first_name|slice:0,1}{$detail->last_name|slice:0,1}</span>
+                        {/if}
+                    </div>
+                    <div class="admin-detail-info">
+                        <h2 class="admin-detail-name">{$detail->first_name} {$detail->last_name}</h2>
+                        <p class="admin-detail-email">{$detail->email}</p>
+                        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
+                            <span class="profile-role role-{$detail->role}">
+                                {if $detail->role === 'admin'}Administrátor{elseif $detail->role === 'leader'}Vedoucí{elseif $detail->role === 'parent'}Rodič{else}Člen{/if}
+                            </span>
+                            {if $detail->is_active}
+                                <span class="admin-status admin-status-active">Aktivní</span>
+                            {else}
+                                <span class="admin-status admin-status-inactive">Neaktivní</span>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {* Personal info *}
+        <div class="profile-card scroll-reveal" style="overflow: visible;">
+            <div class="profile-card-header">
+                <h2 class="profile-card-title">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    Osobní údaje
+                </h2>
+            </div>
+            <div class="profile-card-body">
+                <div class="profile-field">
+                    <label>Jméno</label>
+                    <span>{$detail->first_name}</span>
+                </div>
+                <div class="profile-field">
+                    <label>Příjmení</label>
+                    <span>{$detail->last_name}</span>
+                </div>
+                <div class="profile-field">
+                    <label>Přezdívka</label>
+                    <span>{$detail->nickname ?? 'Nenastaveno'}</span>
+                </div>
+                <div class="profile-field">
+                    <label>E-mail</label>
+                    <span>{$detail->email}</span>
+                </div>
+                <div class="profile-field">
+                    <label>Telefon</label>
+                    <span>{$detail->phone ?? 'Nevyplněno'}</span>
+                </div>
+                <div class="profile-field">
+                    <label>Newsletter</label>
+                    <span>{if $detail->newsletter}Odebírá{else}Neodebírá{/if}</span>
+                </div>
+                <div class="profile-field">
+                    <label>Registrace</label>
+                    <span>{$detail->created_at|date:'j. n. Y H:i'}</span>
+                </div>
+            </div>
+        </div>
+
+        {* Security *}
+        <div class="profile-card scroll-reveal" style="overflow: visible;">
+            <div class="profile-card-header">
+                <h2 class="profile-card-title">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                    Zabezpečení a účet
+                </h2>
+            </div>
+            <div class="profile-card-body">
+                <div class="profile-field">
+                    <label>Heslo</label>
+                    <span>{if $detail->password_hash}Nastaveno{else}Nenastaveno (OAuth){/if}</span>
+                </div>
+                <div class="profile-field">
+                    <label>2FA</label>
+                    <span>
+                        {if $detail->two_factor_type === 'none' || !$detail->two_factor_type}
+                            Neaktivní
+                        {elseif $detail->two_factor_type === 'email'}
+                            E-mail {if $detail->two_factor_verified}(ověřeno){else}(neověřeno){/if}
+                        {elseif $detail->two_factor_type === 'totp'}
+                            Authenticator {if $detail->two_factor_verified}(ověřeno){else}(neověřeno){/if}
+                        {/if}
+                    </span>
+                </div>
+                <div class="profile-field">
+                    <label>Google</label>
+                    <span>{if $detail->google_id}Propojeno{else}Nepropojeno{/if}</span>
+                </div>
+                <div class="profile-field">
+                    <label>Facebook</label>
+                    <span>{if $detail->facebook_id}Propojeno{else}Nepropojeno{/if}</span>
+                </div>
+                <div class="profile-field">
+                    <label>Discord</label>
+                    <span>{if $detail->discord_id}Propojeno{else}Nepropojeno{/if}</span>
+                </div>
+            </div>
+        </div>
+
+        {* Admin actions *}
+        {if $detail->role !== 'admin' && $detail->id !== $currentUserId}
+            <div class="profile-card scroll-reveal" style="overflow: visible;">
+                <div class="profile-card-header">
+                    <h2 class="profile-card-title">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Akce
+                    </h2>
+                </div>
+                <div class="profile-card-body">
+                    <div class="admin-detail-actions">
+                        <div class="admin-detail-action-row">
+                            <div>
+                                <strong>Změnit roli</strong>
+                                <p>Aktuální role: {if $detail->role === 'leader'}Vedoucí{elseif $detail->role === 'parent'}Rodič{else}Člen{/if}</p>
+                            </div>
+                            <div class="custom-select"
+                                data-original="{$detail->role}"
+                                data-url-member="{link changeRole!, userId => $detail->id, role => 'member'}"
+                                data-url-parent="{link changeRole!, userId => $detail->id, role => 'parent'}"
+                                data-url-leader="{link changeRole!, userId => $detail->id, role => 'leader'}"
+                                data-name="{$detail->first_name} {$detail->last_name}">
+                                <button type="button" class="custom-select-trigger" onclick="toggleSelect(this)">
+                                    <span>{if $detail->role === 'member'}Člen{elseif $detail->role === 'parent'}Rodič{else}Vedoucí{/if}</span>
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                </button>
+                                <div class="custom-select-dropdown">
+                                    <div class="custom-select-option {if $detail->role === 'member'}selected{/if}" data-value="member" onclick="selectOption(this)">Člen</div>
+                                    <div class="custom-select-option {if $detail->role === 'parent'}selected{/if}" data-value="parent" onclick="selectOption(this)">Rodič</div>
+                                    <div class="custom-select-option {if $detail->role === 'leader'}selected{/if}" data-value="leader" onclick="selectOption(this)">Vedoucí</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="admin-detail-action-row">
+                            <div>
+                                <strong>{if $detail->is_active}Deaktivovat účet{else}Aktivovat účet{/if}</strong>
+                                <p>{if $detail->is_active}Uživatel se nebude moci přihlásit{else}Uživatel se bude moci přihlásit{/if}</p>
+                            </div>
+                            <a n:href="toggleActive!, userId => $detail->id"
+                               class="admin-action-btn {if $detail->is_active}admin-action-btn-danger{else}admin-action-btn-success{/if}"
+                               onclick="return confirm('{if $detail->is_active}Deaktivovat uživatele {$detail->first_name} {$detail->last_name}?{else}Aktivovat uživatele {$detail->first_name} {$detail->last_name}?{/if}')">
+                                {if $detail->is_active}Deaktivovat{else}Aktivovat{/if}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {/if}
+        </div>
+    </div>
+</section>
+
+<script>
+function toggleSelect(trigger) {
+    var wrap = trigger.closest('.custom-select');
+    var isOpen = wrap.classList.contains('open');
+    document.querySelectorAll('.custom-select.open').forEach(function(s) { s.classList.remove('open'); });
+    if (!isOpen) wrap.classList.add('open');
+}
+
+function selectOption(option) {
+    var wrap = option.closest('.custom-select');
+    var newRole = option.dataset.value;
+    var original = wrap.dataset.original;
+    wrap.classList.remove('open');
+    if (newRole === original) return;
+    var roleNames = { 'leader': 'Vedoucí', 'parent': 'Rodič', 'member': 'Člen' };
+    var roleName = roleNames[newRole] || newRole;
+    if (!confirm('Změnit roli uživatele ' + wrap.dataset.name + ' na ' + roleName + '?')) return;
+    var urls = { 'leader': wrap.dataset.urlLeader, 'parent': wrap.dataset.urlParent, 'member': wrap.dataset.urlMember };
+    var url = urls[newRole];
+    window.location.href = url;
+}
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.custom-select')) {
+        document.querySelectorAll('.custom-select.open').forEach(function(s) { s.classList.remove('open'); });
+    }
+});
+</script>
+
+{/block}

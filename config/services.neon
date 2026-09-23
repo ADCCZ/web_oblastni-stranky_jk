@@ -1,0 +1,37 @@
+services:
+	- App\Core\RouterFactory::createRouter
+
+	# Security
+	security.authenticator: App\Security\Authenticator
+
+	# OAuth
+	- App\Security\OAuthService(%oauth%)
+	- App\Security\OAuthAuthenticator
+
+	# Mail
+	- App\Services\MailService
+	- App\Services\TotpService
+
+	# Excel
+	-
+		factory: App\Services\ExcelExportService
+		setup:
+			- setTempDir(%tempDir%)
+
+	# Components
+	- App\Components\Navbar\NavbarFactory
+
+
+search:
+	-	in: %appDir%
+		classes:
+			- *Facade
+			- *Repository
+			- *Service
+		exclude:
+			classes:
+				- App\Services\ExcelExportService
+
+	-	in: %appDir%/Forms
+		classes:
+			- *Factory

@@ -1,0 +1,244 @@
+{* Navbar Component *}
+
+{* Logo - samostatný fixed element pro animaci *}
+<a href="{plink Home:}" id="logo-link" class="group logo-animate {if !$isHomepage}logo-inner{/if}">
+    <div class="logo-ring rounded-full transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-2xl {if $isHomepage}bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-500{else}bg-gradient-to-br from-gray-200 via-gray-100 to-gray-200 dark:from-gray-600 dark:via-gray-700 dark:to-gray-600{/if}">
+        <div class="bg-white dark:bg-gray-800 rounded-full">
+            <img
+                src="{$basePath}/images/logo.png"
+                alt="Oblast Jižní Kříž - Klub Pathfinder"
+                id="navbar-logo"
+                class="object-contain rounded-full"
+            >
+        </div>
+    </div>
+</a>
+
+{* Navbar wrapper - absolutně pozicovaný přes obsah *}
+<div id="navbar-wrapper" class="absolute left-0 right-0 z-50" style="top: 40px;">
+    <nav id="navbar" class="rounded-2xl relative overflow-visible navbar-start">
+        {* VÝŠKA NAVBARU - řízeno CSS *}
+        <div class="flex justify-between items-center">
+
+            {* Desktop: Left navigation links *}
+            {* Použití: n:class="'nav-font ...', $presenter->isLinkCurrent('Presenter:action') ? 'nav-link-active'" *}
+            <div class="desktop-nav items-center">
+                <a href="{plink Event:default}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold', $presenter->isLinkCurrent('Event:*') ? 'nav-link-active'">
+                    AKCE
+                </a>
+                <a href="#" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                    AKTUALITY
+                </a>
+                <a href="#" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                    ODDÍLY
+                </a>
+                <a href="#" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                    GALERIE
+                </a>
+                <a href="#" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                    HISTORIE
+                </a>
+            </div>
+
+            {* Desktop: Spacer for logo *}
+            <div class="desktop-nav logo-spacer"></div>
+
+            {* Desktop: Right navigation links *}
+            <div class="desktop-nav desktop-nav-right items-center">
+                <a href="#" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                    O NÁS
+                </a>
+                <a href="#" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                    ODKAZY
+                </a>
+                <a href="#" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                    KONTAKT
+                </a>
+            </div>
+
+            {* Desktop: Far right - Dark mode toggle + Login *}
+            <div class="desktop-nav desktop-nav-actions items-center">
+                <button type="button" class="toggle-switch" onclick="toggleDarkMode()" title="Přepnout tmavý režim">
+                    <i data-lucide="sun" class="icon-sun text-yellow-500"></i>
+                    <i data-lucide="moon" class="icon-moon text-blue-200"></i>
+                </button>
+
+                {if $user->isLoggedIn()}
+                    {* Profil *}
+                    <a href="{plink Profile:}" class="nav-icon-btn bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-all duration-300" title="Profil">
+                        <i data-lucide="user" class="w-6 h-6"></i>
+                    </a>
+                    {* Odhlásit *}
+                    <a href="{plink Sign:out}" class="nav-icon-btn nav-logout-btn bg-gray-100 text-gray-700 rounded-xl transition-all duration-300" title="Odhlásit se">
+                        <i data-lucide="log-out" class="w-6 h-6"></i>
+                    </a>
+                {else}
+                    <a href="{plink Sign:in}" class="nav-font nav-btn text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300" style="background-color: #005a8c;">
+                        PŘIHLÁSIT
+                    </a>
+                {/if}
+            </div>
+
+            {* Mobile: Hamburger menu button *}
+            <button type="button" class="mobile-menu-btn p-3 rounded-lg text-gray-600 hover:text-primary transition-colors" onclick="toggleMobileMenu()" style="margin-left: auto;">
+                <i data-lucide="menu" id="menu-icon-open" style="width: 32px; height: 32px;"></i>
+                <i data-lucide="x" id="menu-icon-close" style="width: 32px; height: 32px; display: none;"></i>
+            </button>
+        </div>
+
+        {* Mobile menu *}
+        {* Použití: n:class="'nav-font mobile-link', $presenter->isLinkCurrent('Presenter:action') ? 'mobile-link-active'" *}
+        <div id="mobile-menu" class="mobile-menu-closed">
+            <div class="mobile-menu-links">
+                <a href="{plink Event:default}" n:class="'nav-font mobile-link', $presenter->isLinkCurrent('Event:*') ? 'mobile-link-active'">AKCE</a>
+                <a href="#" n:class="'nav-font mobile-link'">AKTUALITY</a>
+                <a href="#" n:class="'nav-font mobile-link'">ODDÍLY</a>
+                <a href="#" n:class="'nav-font mobile-link'">GALERIE</a>
+                <a href="#" n:class="'nav-font mobile-link'">HISTORIE</a>
+                <a href="#" n:class="'nav-font mobile-link'">O NÁS</a>
+                <a href="#" n:class="'nav-font mobile-link'">ODKAZY</a>
+                <a href="#" n:class="'nav-font mobile-link'">KONTAKT</a>
+
+                <div class="mobile-menu-footer">
+                    <button type="button" class="toggle-switch" onclick="toggleDarkMode()">
+                        <i data-lucide="sun" class="icon-sun text-yellow-500"></i>
+                        <i data-lucide="moon" class="icon-moon text-blue-200"></i>
+                    </button>
+                    {if $user->isLoggedIn()}
+                        <div class="flex gap-3">
+                            {* Profil *}
+                            <a href="{plink Profile:}" class="mobile-icon-btn bg-gray-200 hover:bg-gray-300 text-gray-700" title="Profil">
+                                <i data-lucide="user" class="w-6 h-6"></i>
+                            </a>
+                            {* Odhlásit *}
+                            <a href="{plink Sign:out}" class="mobile-icon-btn bg-red-100 hover:bg-red-200 text-red-600" title="Odhlásit se">
+                                <i data-lucide="log-out" class="w-6 h-6"></i>
+                            </a>
+                        </div>
+                    {else}
+                        <a href="{plink Sign:in}" class="nav-font mobile-btn mobile-btn-primary">PŘIHLÁSIT</a>
+                    {/if}
+                </div>
+
+                {* Mobile user bar *}
+                {if $user->isLoggedIn() && $displayName}
+                    <div class="mobile-user-bar mobile-user-bar-{$userRole}">
+                        Přihlášen jako: <strong>{$displayName}</strong>
+                    </div>
+                {/if}
+            </div>
+        </div>
+    </nav>
+</div>
+
+{* Logged-in user bar - samostatný element mimo navbar *}
+{if $user->isLoggedIn() && $displayName}
+    <div id="user-bar" class="user-bar user-bar-{$userRole}">
+        <span class="user-bar-text">
+            Přihlášen jako: <strong>{$displayName}</strong>
+        </span>
+    </div>
+{/if}
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const logo = document.getElementById('logo-link');
+    const iconOpen = document.getElementById('menu-icon-open');
+    const iconClose = document.getElementById('menu-icon-close');
+    const isOpen = menu.classList.contains('mobile-menu-open');
+
+    if (isOpen) {
+        closeMobileMenu();
+    } else {
+        // Otevírání
+        menu.classList.remove('mobile-menu-closed');
+        menu.classList.add('mobile-menu-open');
+        logo.classList.add('logo-moved');
+        iconOpen.style.display = 'none';
+        iconClose.style.display = 'block';
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const logo = document.getElementById('logo-link');
+    const iconOpen = document.getElementById('menu-icon-open');
+    const iconClose = document.getElementById('menu-icon-close');
+
+    menu.classList.remove('mobile-menu-open');
+    menu.classList.add('mobile-menu-closed');
+    logo.classList.remove('logo-moved');
+    if (iconOpen) iconOpen.style.display = 'block';
+    if (iconClose) iconClose.style.display = 'none';
+}
+
+// Zavři menu při zvětšení obrazovky nad 1024px
+window.addEventListener('resize', function() {
+    if (window.innerWidth >= 1024) {
+        closeMobileMenu();
+    }
+});
+
+// Navbar intro animace
+document.addEventListener('DOMContentLoaded', function() {
+    const navbar = document.getElementById('navbar');
+    const logo = document.getElementById('logo-link');
+    const heroContent = document.getElementById('hero-content');
+
+    // Okamžitě na vrch stránky
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+
+    // Zabrání scrollu během animace - scrollbar zůstane viditelný (bez posunu layoutu)
+    document.documentElement.style.overflowY = 'scroll';
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = '0';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+
+    // Po dokončení animace loga (1000ms + 200ms delay) - navbar se vysune
+    setTimeout(function() {
+        // Logo do finální pozice
+        logo.classList.remove('logo-animate');
+        logo.classList.add('logo-final');
+
+        // Navbar se vysune
+        navbar.classList.remove('navbar-start');
+        navbar.classList.add('navbar-expand');
+
+        // Hero content animace se spustí automaticky díky CSS (animation-delay)
+        // Delays: title 1.4s, subtitle 1.7s, buttons 2.0s (+ 0.8s duration each)
+
+        // Po dokončení všech hero animací (buttons: 2.0s delay + 0.8s = 2.8s od page load)
+        // Přepneme na finální stav (2.8s - 1.3s navbar delay = 1.5s po tomto setTimeout)
+        if (heroContent) {
+            setTimeout(function() {
+                heroContent.classList.remove('hero-animate');
+                heroContent.classList.add('hero-final');
+            }, 1600);
+        }
+
+        // Povolí scroll po dokončení animace navbaru
+        setTimeout(function() {
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.left = '';
+            document.body.style.right = '';
+            document.documentElement.style.overflowY = '';
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
+            // Vysune user bar po dokončení navbar animace
+            const userBar = document.getElementById('user-bar');
+            if (userBar) {
+                setTimeout(function() {
+                    userBar.classList.add('user-bar-visible');
+                }, 300);
+            }
+        }, 1200);
+    }, 1300);
+});
+</script>

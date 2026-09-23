@@ -1,0 +1,373 @@
+{block content}
+
+<section class="reg-form-section">
+    <div class="reg-form-container">
+        {* Header *}
+        <div class="admin-header scroll-reveal">
+            <div class="admin-header-content">
+                <h1 class="admin-title font-display">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    Registrace: {$event->title}
+                </h1>
+                <a n:href="Event:show, slug => $event->slug" class="admin-back-link">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Zpět na akci
+                </a>
+            </div>
+        </div>
+
+        {* Already registered / Full *}
+        {if $alreadyRegistered}
+            <div class="profile-card scroll-reveal">
+                <div class="profile-card-body" style="text-align: center; padding: 30px;">
+                    <svg style="width: 48px; height: 48px; color: #22c55e; margin: 0 auto 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <h2 style="font-weight: 700; margin-bottom: 4px;">Jste již registrováni</h2>
+                    <p style="color: var(--text-gray);">Na tuto akci jste se již přihlásili.</p>
+                </div>
+            </div>
+        {elseif $isFull}
+            <div class="profile-card scroll-reveal">
+                <div class="profile-card-body" style="text-align: center; padding: 30px;">
+                    <svg style="width: 48px; height: 48px; color: #f59e0b; margin: 0 auto 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <h2 style="font-weight: 700; margin-bottom: 4px;">Kapacita naplněna</h2>
+                    <p style="color: var(--text-gray);">Bohužel, kapacita této akce je již plná.</p>
+                </div>
+            </div>
+        {else}
+            {* Registration form *}
+            <div class="profile-card scroll-reveal">
+                <div class="profile-card-header">
+                    <h2 class="profile-card-title">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        {$formTemplate->name}
+                    </h2>
+                </div>
+                <div class="profile-card-body">
+                    <form id="registration-form" novalidate
+                        data-submit-url="{$presenter->link('submitRegistration!')}"
+                        data-event-slug="{$event->slug}"
+                        data-redirect-url="{$presenter->link('Event:show', ['slug' => $event->slug])}">
+
+                        {* Zakladni udaje - vzdy pritomne *}
+                        <h3 class="reg-section-title">Základní údaje</h3>
+                        <div class="reg-base-fields">
+                            <div class="reg-field-wrapper">
+                                <label class="profile-form-label">Jméno <span style="color: #ef4444;">*</span></label>
+                                <input type="text" name="base_first_name" class="profile-form-input" value="{$prefill['first_name']}" required>
+                            </div>
+                            <div class="reg-field-wrapper">
+                                <label class="profile-form-label">Příjmení <span style="color: #ef4444;">*</span></label>
+                                <input type="text" name="base_last_name" class="profile-form-input" value="{$prefill['last_name']}" required>
+                            </div>
+                            <div class="reg-field-wrapper" style="grid-column: 1 / -1;">
+                                <label class="auth-checkbox-label" style="margin: 0;">
+                                    <input type="checkbox" name="base_is_pathfinder_member" class="auth-checkbox" {if $prefill['is_pathfinder_member'] ?? false}checked{/if}>
+                                    <span>Registrován v Klubu Pathfinder</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="reg-base-fields" style="margin-top: 12px;">
+                            <div class="reg-field-wrapper" style="grid-column: 1 / -1;">
+                                <label class="profile-form-label">Ulice a č.p. <span style="color: #ef4444;">*</span></label>
+                                <input type="text" name="base_street" class="profile-form-input" value="{$prefill['street'] ?? ''}" placeholder="Např. Hlavní 123" required>
+                            </div>
+                            <div class="reg-field-wrapper">
+                                <label class="profile-form-label">Město <span style="color: #ef4444;">*</span></label>
+                                <input type="text" name="base_city" class="profile-form-input" value="{$prefill['city'] ?? ''}" required>
+                            </div>
+                            <div class="reg-field-wrapper">
+                                <label class="profile-form-label">PSČ <span style="color: #ef4444;">*</span></label>
+                                <input type="text" name="base_zip" class="profile-form-input" value="{$prefill['zip'] ?? ''}" maxlength="10" required>
+                            </div>
+                            <div class="reg-field-wrapper">
+                                <label class="profile-form-label">Datum narození <span style="color: #ef4444;">*</span></label>
+                                <input type="date" name="base_birth_date" class="profile-form-input" value="{$prefill['birth_date'] ?? ''}" required>
+                            </div>
+                        </div>
+
+                        {if count($fields) > 0}
+                            <h3 class="reg-section-title">Doplňující informace</h3>
+                        {/if}
+
+                        {foreach $fields as $field}
+                            <div class="reg-field-wrapper"
+                                 data-field-id="{$field->id}"
+                                 data-conditions="{$field->conditions}"
+                                 {if $field->conditions}style="display: none;"{/if}>
+
+                                {* Display-only types *}
+                                {if $field->field_type === 'info'}
+                                    <div class="reg-info-block">
+                                        <h4>{$field->label}</h4>
+                                        {if $field->placeholder}<p>{$field->placeholder}</p>{/if}
+                                    </div>
+
+                                {elseif $field->field_type === 'image'}
+                                    {php $imgOpts = $field->options ? json_decode($field->options, true) : []}
+                                    {php $imgAlign = $imgOpts['align'] ?? 'center'}
+                                    {php $imgWidth = $imgOpts['width'] ?? 100}
+                                    <div class="reg-image-block" style="text-align: {$imgAlign};">
+                                        {if $field->label}<p class="reg-image-caption">{$field->label}</p>{/if}
+                                        {if $field->placeholder}<img src="{$field->placeholder}" alt="{$field->label}" style="max-width: {$imgWidth}%;">{/if}
+                                    </div>
+
+                                {elseif $field->field_type === 'youtube'}
+                                    <div class="reg-youtube-block">
+                                        {if $field->label}<p class="reg-youtube-caption">{$field->label}</p>{/if}
+                                        {if $field->placeholder}
+                                            <div class="reg-youtube-wrapper">
+                                                <iframe src="" data-youtube-url="{$field->placeholder}" frameborder="0" allowfullscreen></iframe>
+                                            </div>
+                                        {/if}
+                                    </div>
+
+                                {else}
+
+                                {if $field->field_type !== 'checkbox'}
+                                    <label class="profile-form-label">
+                                        {$field->label}
+                                        {if $field->is_required}<span style="color: #ef4444;">*</span>{/if}
+                                    </label>
+                                {/if}
+
+                                {if $field->field_type === 'text'}
+                                    <input type="text" name="field_{$field->id}" class="profile-form-input"
+                                           placeholder="{$field->placeholder}" {if $field->is_required}required{/if}>
+
+                                {elseif $field->field_type === 'textarea'}
+                                    <textarea name="field_{$field->id}" class="profile-form-input" rows="3"
+                                              placeholder="{$field->placeholder}" {if $field->is_required}required{/if}></textarea>
+
+                                {elseif $field->field_type === 'number'}
+                                    <input type="number" name="field_{$field->id}" class="profile-form-input"
+                                           placeholder="{$field->placeholder}" {if $field->is_required}required{/if}>
+
+                                {elseif $field->field_type === 'select'}
+                                    <select name="field_{$field->id}" class="profile-form-input" {if $field->is_required}required{/if}>
+                                        <option value="">-- Vyberte --</option>
+                                        {foreach json_decode($field->options) as $opt}
+                                            <option value="{$opt}">{$opt}</option>
+                                        {/foreach}
+                                    </select>
+
+                                {elseif $field->field_type === 'radio'}
+                                    <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 4px;">
+                                        {foreach json_decode($field->options) as $opt}
+                                            <label class="auth-checkbox-label" style="margin: 0;">
+                                                <input type="radio" name="field_{$field->id}" value="{$opt}" class="auth-checkbox">
+                                                <span>{$opt}</span>
+                                            </label>
+                                        {/foreach}
+                                    </div>
+
+                                {elseif $field->field_type === 'checkbox'}
+                                    <label class="auth-checkbox-label" style="margin: 4px 0;">
+                                        <input type="checkbox" name="field_{$field->id}" value="1" class="auth-checkbox">
+                                        <span>{$field->label} {if $field->is_required}<span style="color: #ef4444;">*</span>{/if}</span>
+                                    </label>
+
+                                {elseif $field->field_type === 'date'}
+                                    <input type="date" name="field_{$field->id}" class="profile-form-input"
+                                           {if $field->is_required}required{/if}>
+                                {/if}
+
+                                {/if}{* end display-only vs input *}
+
+                                <div class="reg-field-error"></div>
+                            </div>
+                        {/foreach}
+
+                        {* Poznamka *}
+                        <div class="reg-field-wrapper" style="margin-top: 20px;">
+                            <label class="profile-form-label">Poznámka <span class="auth-label-optional">(volitelné)</span></label>
+                            <textarea name="note" class="profile-form-input" rows="2" placeholder="Např. alergie, speciální požadavky..."></textarea>
+                        </div>
+
+                        <div id="form-errors" style="display: none; margin-top: 12px;" class="auth-error"></div>
+
+                        <div style="margin-top: 20px;">
+                            <button type="submit" id="submit-btn" class="auth-submit-btn">Odeslat registraci</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {/if}
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var fieldsConfig = {$fieldsJson|noescape};
+    var profilePrefill = {$profilePrefill|json|noescape};
+    var regForm = document.getElementById('registration-form');
+    if (!regForm) return;
+    var submitUrl = regForm.dataset.submitUrl;
+    var eventSlug = regForm.dataset.eventSlug;
+    var displayOnlyTypes = ['info', 'image', 'youtube'];
+
+    // Predvyplneni profilovych poli (systemKey)
+    Object.keys(profilePrefill).forEach(function(fieldId) {
+        var val = profilePrefill[fieldId];
+        var input = document.querySelector('[name="field_' + fieldId + '"]');
+        if (!input) return;
+        if (input.type === 'checkbox') {
+            input.checked = !!val;
+        } else if (input.tagName === 'SELECT') {
+            // Pro select, najdi odpovidajici option
+            for (var i = 0; i < input.options.length; i++) {
+                if (input.options[i].value === String(val)) {
+                    input.selectedIndex = i;
+                    break;
+                }
+            }
+        } else {
+            input.value = val;
+        }
+    });
+
+    // YouTube embed: parse URL to embed
+    document.querySelectorAll('[data-youtube-url]').forEach(function(iframe) {
+        var url = iframe.dataset.youtubeUrl;
+        var match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/);
+        if (match) iframe.src = 'https://www.youtube.com/embed/' + match[1];
+    });
+
+    // Filter out display-only fields from config for submit
+    var inputFieldsConfig = fieldsConfig.filter(function(fc) {
+        return displayOnlyTypes.indexOf(fc.type) === -1;
+    });
+
+    // Conditional fields
+    function evaluateConditions() {
+        fieldsConfig.forEach(function(fc) {
+            if (!fc.conditions || !fc.conditions.rules || !fc.conditions.rules[0]) return;
+            var rule = fc.conditions.rules[0];
+            var parentFieldIndex = rule.field_index;
+            if (parentFieldIndex === undefined || parentFieldIndex === null) return;
+
+            var parentConfig = fieldsConfig[parentFieldIndex];
+            if (!parentConfig) return;
+
+            var parentInput = document.querySelector('[name="field_' + parentConfig.id + '"]');
+            if (!parentInput) {
+                // Zkus radio
+                var checked = document.querySelector('[name="field_' + parentConfig.id + '"]:checked');
+                var parentValue = checked ? checked.value : '';
+            } else {
+                if (parentInput.type === 'checkbox') {
+                    var parentValue = parentInput.checked ? '1' : '0';
+                } else {
+                    var parentValue = parentInput.value;
+                }
+            }
+
+            var show = false;
+            switch (rule.operator) {
+                case 'equals': show = parentValue === rule.value; break;
+                case 'not_equals': show = parentValue !== rule.value; break;
+                case 'contains': show = parentValue.indexOf(rule.value) !== -1; break;
+                case 'not_empty': show = parentValue !== '' && parentValue !== '0'; break;
+                case 'empty': show = parentValue === '' || parentValue === '0'; break;
+            }
+
+            var wrapper = document.querySelector('[data-field-id="' + fc.id + '"]');
+            if (wrapper) wrapper.style.display = show ? '' : 'none';
+        });
+    }
+
+    // Style native selects
+    initStyledSelects('#registration-form');
+
+    // Listen for changes on all fields
+    document.querySelectorAll('#registration-form input, #registration-form select, #registration-form textarea').forEach(function(el) {
+        el.addEventListener('change', evaluateConditions);
+        el.addEventListener('input', evaluateConditions);
+    });
+    evaluateConditions();
+
+    // Form submit
+    var form = document.getElementById('registration-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var btn = document.getElementById('submit-btn');
+            var errDiv = document.getElementById('form-errors');
+
+            // Collect values (only input fields, skip display-only)
+            var fieldValues = {};
+            inputFieldsConfig.forEach(function(fc) {
+                var input = document.querySelector('[name="field_' + fc.id + '"]');
+                if (!input) {
+                    var checked = document.querySelector('[name="field_' + fc.id + '"]:checked');
+                    fieldValues[fc.id] = checked ? checked.value : '';
+                } else {
+                    if (input.type === 'checkbox') {
+                        fieldValues[fc.id] = input.checked ? '1' : '';
+                    } else {
+                        fieldValues[fc.id] = input.value;
+                    }
+                }
+            });
+
+            var note = form.querySelector('[name="note"]');
+            var payload = {
+                eventId: {$event->id},
+                baseFields: {
+                    first_name: form.querySelector('[name="base_first_name"]').value.trim(),
+                    last_name: form.querySelector('[name="base_last_name"]').value.trim(),
+                    is_pathfinder_member: form.querySelector('[name="base_is_pathfinder_member"]').checked ? 1 : 0,
+                    street: form.querySelector('[name="base_street"]').value.trim(),
+                    city: form.querySelector('[name="base_city"]').value.trim(),
+                    zip: form.querySelector('[name="base_zip"]').value.trim(),
+                    birth_date: form.querySelector('[name="base_birth_date"]').value
+                },
+                fields: fieldValues,
+                note: note ? note.value : ''
+            };
+
+            btn.disabled = true;
+            btn.textContent = 'Odesílám...';
+            errDiv.style.display = 'none';
+
+            fetch(submitUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    if (typeof showToast === 'function') showToast(data.message || 'Registrace odeslána.', 'success');
+                    btn.textContent = 'Registrace odeslána';
+                    setTimeout(function() {
+                        window.location.href = regForm.dataset.redirectUrl;
+                    }, 1000);
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Odeslat registraci';
+                    errDiv.innerHTML = '<ul>' + (data.errors || ['Chyba.']).map(function(e) { return '<li>' + e + '</li>'; }).join('') + '</ul>';
+                    errDiv.style.display = 'block';
+                }
+            })
+            .catch(function() {
+                btn.disabled = false;
+                btn.textContent = 'Odeslat registraci';
+                errDiv.innerHTML = '<ul><li>Chyba při odesílání.</li></ul>';
+                errDiv.style.display = 'block';
+            });
+        });
+    }
+});
+</script>
+
+{/block}

@@ -1,0 +1,164 @@
+{block content}
+
+<section class="event-detail-section">
+    <div class="event-detail-container">
+        {* Header *}
+        <div class="event-detail-header scroll-reveal">
+            <h1 class="event-detail-title font-display text-gray-900 dark:text-white">Nová akce</h1>
+            <p class="event-detail-description text-gray-600 dark:text-gray-300">Vyplňte údaje o nové akci</p>
+        </div>
+
+        {* Back link right-aligned above card *}
+        <div class="event-back-right scroll-reveal">
+            <a n:href="Event:default" class="event-back-link">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Zpět na seznam akcí
+            </a>
+        </div>
+
+        {* Form *}
+        <div class="profile-card scroll-reveal" style="overflow: visible;">
+            <div class="profile-card-body">
+                {form eventForm}
+                    {* Form errors *}
+                    <div n:ifcontent class="event-form-errors">
+                        <ul n:if="$form->hasErrors()">
+                            {foreach $form->getErrors() as $error}
+                                <li>{$error}</li>
+                            {/foreach}
+                        </ul>
+                    </div>
+
+                    <div class="event-form-grid">
+                        <div class="event-form-group event-form-full">
+                            <label class="profile-form-label" for="frm-eventForm-title">Název akce *</label>
+                            <input n:name="title" class="profile-form-input" placeholder="Název akce">
+                        </div>
+
+                        <div class="event-form-group event-form-full">
+                            <label class="profile-form-label" for="frm-eventForm-description">Krátký popis</label>
+                            <textarea n:name="description" class="profile-form-input" placeholder="Krátký popis akce (max 500 znaků)"></textarea>
+                        </div>
+
+                        <div class="event-form-group event-form-full">
+                            <label class="profile-form-label" for="frm-eventForm-content">Podrobný popis</label>
+                            <textarea n:name="content" class="profile-form-input" placeholder="Podrobný popis, program, co s sebou..."></textarea>
+                        </div>
+
+                        <div class="event-form-group event-form-full">
+                            <label class="profile-form-label" for="frm-eventForm-image">Obrázek / PDF</label>
+                            <input n:name="image" class="profile-form-input event-file-input">
+                            <span class="event-file-hint text-gray-500 dark:text-gray-400">Povolené formáty: JPG, PNG, GIF, WEBP, PDF (max 10 MB)</span>
+                        </div>
+
+                        <div class="event-form-group">
+                            <label class="profile-form-label" for="frm-eventForm-location">Místo konání</label>
+                            <input n:name="location" class="profile-form-input" placeholder="Např. Tábořiště u lesa">
+                        </div>
+
+                        <div class="event-form-group">
+                            <label class="profile-form-label" for="frm-eventForm-location_url">Odkaz na místo (mapy)</label>
+                            <input n:name="location_url" class="profile-form-input" placeholder="https://mapy.cz/...">
+                        </div>
+
+                        <div class="event-form-group">
+                            <label class="profile-form-label" for="frm-eventForm-category_id">Kategorie</label>
+                            <select n:name="category_id" class="profile-form-input"></select>
+                        </div>
+
+                        <div class="event-form-group">
+                            <label class="profile-form-label" for="frm-eventForm-availability">Dostupnost</label>
+                            <select n:name="availability" class="profile-form-input"></select>
+                        </div>
+
+                        <div class="event-form-group">
+                            <label class="profile-form-label" for="frm-eventForm-registration_to">Registrace do</label>
+                            <input n:name="registration_to" class="profile-form-input">
+                        </div>
+
+                        <div class="event-form-group">
+                            <label class="profile-form-label" for="frm-eventForm-start_date">Datum začátku *</label>
+                            <input n:name="start_date" class="profile-form-input">
+                        </div>
+
+                        <div class="event-form-group">
+                            <label class="profile-form-label" for="frm-eventForm-end_date">Datum konce</label>
+                            <input n:name="end_date" class="profile-form-input">
+                        </div>
+
+                        <div class="event-form-group">
+                            <label class="profile-form-label" for="frm-eventForm-registration_type">Typ registrace</label>
+                            <select n:name="registration_type" class="profile-form-input" id="reg-type-select"></select>
+                        </div>
+
+                        <div class="event-form-group" id="reg-field-url" style="display: none;">
+                            <label class="profile-form-label" for="frm-eventForm-form_url">Odkaz na formulář</label>
+                            <input n:name="form_url" class="profile-form-input">
+                        </div>
+
+                        <div class="event-form-group" id="reg-field-template" style="display: none;">
+                            <label class="profile-form-label" for="frm-eventForm-form_template_id">Šablona formuláře</label>
+                            <select n:name="form_template_id" class="profile-form-input"></select>
+                            <a n:href="FormTemplate:" style="font-size: 0.8rem; color: var(--primary); margin-top: 4px; display: inline-block;">Spravovat šablony</a>
+                        </div>
+
+                        <div class="event-form-group" id="reg-field-button" style="display: none;">
+                            <label class="profile-form-label" for="frm-eventForm-form_button_text">Text tlačítka</label>
+                            <input n:name="form_button_text" class="profile-form-input">
+                        </div>
+
+                        <div class="event-form-group">
+                            <label class="profile-form-label" for="frm-eventForm-capacity">Kapacita</label>
+                            <input n:name="capacity" class="profile-form-input" placeholder="Počet míst">
+                        </div>
+
+                        <div class="event-form-group">
+                            <label class="profile-form-label" for="frm-eventForm-price">Cena (Kč)</label>
+                            <input n:name="price" class="profile-form-input" placeholder="0 = zdarma">
+                        </div>
+
+                        <div class="event-form-group event-form-full">
+                            <label class="event-form-checkbox">
+                                <input n:name="is_published">
+                                <span>Publikovat ihned</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="event-form-actions">
+                        <button n:name="save" class="event-form-submit">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            Vytvořit akci
+                        </button>
+                    </div>
+                {/form}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Registration type toggle
+    var regTypeSelect = document.getElementById('reg-type-select');
+    if (regTypeSelect) {
+        function updateRegFields() {
+            var val = regTypeSelect.value;
+            document.getElementById('reg-field-url').style.display = val === 'external' ? '' : 'none';
+            document.getElementById('reg-field-template').style.display = val === 'internal' ? '' : 'none';
+            document.getElementById('reg-field-button').style.display = (val === 'external' || val === 'internal') ? '' : 'none';
+        }
+        regTypeSelect.addEventListener('change', updateRegFields);
+        updateRegFields();
+    }
+
+    // Style all selects in the event form
+    initStyledSelects('.profile-card-body', { selector: 'select.profile-form-input' });
+});
+</script>
+
+{/block}

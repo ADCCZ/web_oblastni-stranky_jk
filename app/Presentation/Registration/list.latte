@@ -1,0 +1,205 @@
+{block content}
+
+<section class="reg-form-section">
+    <div class="reg-list-container">
+        {* Header *}
+        <div class="admin-header scroll-reveal">
+            <div class="admin-header-content">
+                <h1 class="admin-title font-display">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                    Registrace: {$event->title}
+                </h1>
+                <a n:href="Event:show, slug => $event->slug" class="admin-back-link">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Zpět na akci
+                </a>
+            </div>
+        </div>
+
+        {* Stats *}
+        {var $total = count($registrations)}
+        {var $pending = 0}
+        {var $confirmed = 0}
+        {var $cancelled = 0}
+        {var $waitlist = 0}
+        {foreach $registrations as $reg}
+            {if $reg['status'] === 'pending'}{var $pending = $pending + 1}
+            {elseif $reg['status'] === 'confirmed'}{var $confirmed = $confirmed + 1}
+            {elseif $reg['status'] === 'cancelled'}{var $cancelled = $cancelled + 1}
+            {elseif $reg['status'] === 'waitlist'}{var $waitlist = $waitlist + 1}
+            {/if}
+        {/foreach}
+
+        <div class="admin-stats scroll-reveal">
+            <div class="admin-stat-card">
+                <div class="stat-number">{$total}</div>
+                <div class="stat-label">Celkem</div>
+            </div>
+            <div class="admin-stat-card">
+                <div class="stat-number">{$confirmed}</div>
+                <div class="stat-label">Potvrzených</div>
+            </div>
+            <div class="admin-stat-card">
+                <div class="stat-number">{$pending}</div>
+                <div class="stat-label">Čekajících</div>
+            </div>
+            <div class="admin-stat-card">
+                <div class="stat-number">{$waitlist}</div>
+                <div class="stat-label">Náhradníků</div>
+            </div>
+        </div>
+
+        {* Actions bar *}
+        <div class="reg-actions-bar scroll-reveal">
+            <div class="reg-filter-group">
+                <button class="reg-filter-btn active" data-filter="all">Všechny ({$total})</button>
+                <button class="reg-filter-btn" data-filter="pending">Čekající ({$pending})</button>
+                <button class="reg-filter-btn" data-filter="confirmed">Potvrzené ({$confirmed})</button>
+                <button class="reg-filter-btn" data-filter="cancelled">Zrušené ({$cancelled})</button>
+                <button class="reg-filter-btn" data-filter="waitlist">Náhradníci ({$waitlist})</button>
+            </div>
+            <a n:href="exportExcel!, eventId => $event->id" class="reg-export-btn">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                Export do Excelu
+            </a>
+        </div>
+
+        {* Registrations table *}
+        <div class="profile-card scroll-reveal">
+            <div class="reg-table-wrapper">
+                {if count($registrations) === 0}
+                    <div class="reg-empty">
+                        <svg style="width: 48px; height: 48px; color: var(--text-gray); margin: 0 auto 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                        </svg>
+                        <p style="color: var(--text-gray); font-weight: 500;">Zatím žádné registrace</p>
+                    </div>
+                {else}
+                    <table class="reg-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Jméno</th>
+                                <th>Dat. nar.</th>
+                                <th>Člen KP</th>
+                                {foreach $fields as $field}
+                                    <th>{$field->label}</th>
+                                {/foreach}
+                                <th>Poznámka</th>
+                                <th>Stav</th>
+                                <th>Datum</th>
+                                <th>Akce</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {foreach $registrations as $i => $reg}
+                                <tr class="reg-row" data-status="{$reg['status']}">
+                                    <td class="reg-cell-num">{$i + 1}</td>
+                                    <td class="reg-cell-name">{$reg['first_name']} {$reg['last_name']}</td>
+                                    <td>{if $reg['birth_date']}{$reg['birth_date']|date:'j. n. Y'}{else}—{/if}</td>
+                                    <td>{if $reg['is_pathfinder_member']}Ano{else}Ne{/if}</td>
+                                    {foreach $fields as $field}
+                                        <td>{$reg['responses'][$field->id] ?? '—'}</td>
+                                    {/foreach}
+                                    <td class="reg-cell-note">{$reg['note'] ?? '—'}</td>
+                                    <td>
+                                        <span class="reg-status-badge reg-status-{$reg['status']}">
+                                            {if $reg['status'] === 'pending'}Čekající
+                                            {elseif $reg['status'] === 'confirmed'}Potvrzená
+                                            {elseif $reg['status'] === 'cancelled'}Zrušená
+                                            {elseif $reg['status'] === 'waitlist'}Náhradník
+                                            {/if}
+                                        </span>
+                                    </td>
+                                    <td class="reg-cell-date">{$reg['created_at']|date:'j. n. Y H:i'}</td>
+                                    <td class="reg-cell-actions">
+                                        <div class="reg-status-dropdown">
+                                            <button class="reg-status-trigger" title="Změnit stav">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                                                </svg>
+                                            </button>
+                                            <div class="reg-status-menu">
+                                                {if $reg['status'] !== 'confirmed'}
+                                                    <a n:href="changeStatus!, registrationId => $reg['id'], status => confirmed" class="reg-status-option reg-opt-confirmed">
+                                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
+                                                        Potvrdit
+                                                    </a>
+                                                {/if}
+                                                {if $reg['status'] !== 'pending'}
+                                                    <a n:href="changeStatus!, registrationId => $reg['id'], status => pending" class="reg-status-option reg-opt-pending">
+                                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
+                                                        Čekající
+                                                    </a>
+                                                {/if}
+                                                {if $reg['status'] !== 'waitlist'}
+                                                    <a n:href="changeStatus!, registrationId => $reg['id'], status => waitlist" class="reg-status-option reg-opt-waitlist">
+                                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
+                                                        Náhradník
+                                                    </a>
+                                                {/if}
+                                                {if $reg['status'] !== 'cancelled'}
+                                                    <a n:href="changeStatus!, registrationId => $reg['id'], status => cancelled" class="reg-status-option reg-opt-cancelled">
+                                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
+                                                        Zrušit
+                                                    </a>
+                                                {/if}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {/foreach}
+                        </tbody>
+                    </table>
+                {/if}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Filter buttons
+    document.querySelectorAll('.reg-filter-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.reg-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+
+            var filter = btn.dataset.filter;
+            document.querySelectorAll('.reg-row').forEach(function(row) {
+                if (filter === 'all' || row.dataset.status === filter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Status dropdown toggles
+    document.querySelectorAll('.reg-status-trigger').forEach(function(trigger) {
+        trigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var menu = trigger.nextElementSibling;
+            var wasOpen = menu.classList.contains('open');
+
+            // Close all menus
+            document.querySelectorAll('.reg-status-menu.open').forEach(function(m) { m.classList.remove('open'); });
+
+            if (!wasOpen) menu.classList.add('open');
+        });
+    });
+
+    document.addEventListener('click', function() {
+        document.querySelectorAll('.reg-status-menu.open').forEach(function(m) { m.classList.remove('open'); });
+    });
+});
+</script>
+
+{/block}
