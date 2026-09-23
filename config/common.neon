@@ -1,6 +1,7 @@
 # see https://doc.nette.org/en/configuring
 
 parameters:
+	oauth: %env.oauth%
 
 
 application:
@@ -11,9 +12,9 @@ application:
 
 
 database:
-	dsn: 'sqlite::memory:'
-	user:
-	password:
+	dsn: %env.database.dsn%
+	user: %env.database.user%
+	password: %env.database.password%
 
 
 latte:
@@ -30,14 +31,13 @@ assets:
 
 
 mail:
-	# Pro vývoj - SMTP na localhost (např. MailHog, Papercut, nebo XAMPP sendmail)
-	# Pro produkci nastavte v local.neon s reálným SMTP serverem
-	smtp: yes
-	host: localhost
-	port: 25
-	# secure: ssl
-	# username:
-	# password:
+	# Hodnoty se čtou z proměnných prostředí (MAIL_SMTP, MAIL_HOST, ...), viz .env.example
+	smtp: %env.mail.smtp%
+	host: %env.mail.host%
+	port: %env.mail.port%
+	username: %env.mail.username%
+	password: %env.mail.password%
+	secure: %env.mail.secure%
 
 
 session:

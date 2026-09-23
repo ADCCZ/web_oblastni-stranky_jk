@@ -6,6 +6,10 @@
 /temp/
 /log/
 
+# Vite cache (unused build tool artifact, project builds CSS via Tailwind CLI)
+/.vite/
+/www/assets/.vite/
+
 # Local config
 /config/local.neon
 
