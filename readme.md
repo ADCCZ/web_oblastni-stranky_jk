@@ -1,64 +1,104 @@
-Nette Web Project
-=================
+# Pathfinder JK
 
-Welcome to the Nette Web Project! This is a basic skeleton application built using
-[Nette](https://nette.org), ideal for kick-starting your new web projects.
+Webová prezentace a informační portál pro oblast "Jižní Kříž" Klubu Pathfinder
+(křesťanská skautská organizace). Web slouží k prezentaci akcí, novinek,
+fotogalerií a registraci účastníků na akce.
 
-Nette is a renowned PHP web development framework, celebrated for its user-friendliness,
-robust security, and outstanding performance. It's among the safest choices
-for PHP frameworks out there.
+## Tech stack
 
-If Nette helps you, consider supporting it by [making a donation](https://nette.org/donate).
-Thank you for your generosity!
+- PHP 8.2+ s frameworkem [Nette](https://nette.org) 3.2+
+- MySQL/MariaDB (Nette Database Explorer)
+- Latte 3.1+ (šablonovací engine)
+- Tailwind CSS 3.4+ (build přes Vite)
+- Vanilla JavaScript
 
+## Role uživatelů
 
-Requirements
-------------
+- **admin** — plný přístup, správa uživatelů, akcí, registrací
+- **leader** — správa akcí a obsahu
+- **member** — prohlížení, registrace na akce
 
-This Web Project is compatible with Nette 3.2 and requires PHP 8.2.
+## Struktura projektu
 
+```
+app/
+├── Presentation/       # Presentery (controllery) + šablony
+│   ├── Home/            Úvodní stránka
+│   ├── Sign/             Přihlášení / registrace
+│   ├── Event/            Akce
+│   ├── Registration/     Registrace na akce
+│   ├── Profile/          Profil uživatele, děti
+│   ├── Admin/            Administrace
+│   ├── FormTemplate/      Form builder pro registrační formuláře
+│   ├── Gallery/          Fotogalerie
+│   ├── Password/         Reset hesla
+│   └── Error/            Chybové stránky
+├── Model/Repository/    Přístup k datům
+├── Forms/               Factory pro formuláře
+├── Security/             Autentizace + OAuth
+├── Services/            Mail, TOTP, export do Excelu
+└── Core/                Router
 
-Installation
-------------
+config/                  Konfigurace Nette (common.neon, services.neon, local.neon)
+migrations/              SQL migrace databázového schématu
+www/                     Veřejný document root (jediný vstupní bod: index.php)
+assets/                  Zdrojové CSS/JS pro build
+```
 
-To install the Web Project, Composer is the recommended tool. If you're new to Composer,
-follow [these instructions](https://doc.nette.org/composer). Then, run:
+## Spuštění projektu
 
-	composer create-project nette/web-project path/to/install
-	cd path/to/install
+### Požadavky
 
-Ensure the `temp/` and `log/` directories are writable.
+- PHP 8.2+
+- MySQL/MariaDB
+- Composer
+- Node.js + npm (pro build CSS)
 
+### Instalace
 
-Asset Building with Vite
-------------------------
+```bash
+composer install
+npm install
+```
 
-This project supports Vite for asset building, which is recommended but optional. To activate Vite:
+### Konfigurace databáze
 
-1. Uncomment the `type: vite` line in the `common.neon` configuration file under the assets mapping section.
-2. Then set up and build the assets:
+1. Vytvořit databázi `pathfinder_jk`
+2. Spustit migrace ze složky `migrations/` v číselném pořadí
+3. Nastavit `config/local.neon` (soubor je v `.gitignore`, je nutné ho vytvořit lokálně):
 
-		npm install
-		npm run build
+```neon
+database:
+    dsn: 'mysql:host=127.0.0.1;dbname=pathfinder_jk'
+    user: root
+    password: ''
+```
 
+### Build CSS
 
-Web Server Setup
-----------------
+```bash
+npm run dev    # vývoj, watch mode
+npm run build  # produkční build (minifikovaný)
+```
 
-To quickly dive in, use PHP's built-in server:
+### Spuštění serveru
 
-	php -S localhost:8000 -t www
+Přes XAMPP (Apache):
 
-Then, open `http://localhost:8000` in your browser to view the welcome page.
+```
+http://localhost/web_oblastni-stranky_jk/www/
+```
 
-For Apache or Nginx users, configure a virtual host pointing to your project's `www/` directory.
+Nebo přes PHP built-in server:
 
-**Important Note:** Ensure `app/`, `config/`, `log/`, and `temp/` directories are not web-accessible.
-Refer to [security warning](https://nette.org/security-warning) for more details.
+```bash
+php -S localhost:8000 -t www
+```
 
+## Bezpečnost
 
-Minimal Skeleton
-----------------
-
-For demonstrating issues or similar tasks, rather than starting a new project, use
-[minimal skeleton](https://github.com/nette/web-project/tree/minimal).
+- XSS ochrana: automatický escaping v Latte
+- SQL injection ochrana: prepared statements přes Nette Database
+- CSRF ochrana: Nette Forms token
+- Hashování hesel: bcrypt (cost 12)
+- Session: Nette session framework

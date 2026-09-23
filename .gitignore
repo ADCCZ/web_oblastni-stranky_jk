@@ -22,6 +22,7 @@ nul
 
 # Claude Code
 /.claude/
+/CLAUDE.md
 
 # Build artifacts (optional - can be included if needed)
 # /www/assets/
