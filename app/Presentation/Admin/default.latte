@@ -84,9 +84,28 @@
                                     </td>
                                     <td data-label="E-mail">{$u->email}</td>
                                     <td data-label="Role">
-                                        <span class="profile-role role-{$u->role}" style="font-size: 0.75rem; padding: 4px 12px;">
-                                            {if $u->role === 'admin'}Admin{elseif $u->role === 'leader'}Vedoucí{elseif $u->role === 'parent'}Rodič{else}Člen{/if}
-                                        </span>
+                                        {if $u->role === 'admin' || $u->id === $currentUserId}
+                                            <span class="profile-role role-{$u->role}" style="font-size: 0.75rem; padding: 4px 12px;">
+                                                {if $u->role === 'admin'}Admin{elseif $u->role === 'leader'}Vedoucí{elseif $u->role === 'parent'}Rodič{else}Člen{/if}
+                                            </span>
+                                        {else}
+                                            <div class="custom-select"
+                                                    data-original="{$u->role}"
+                                                    data-url-member="{link changeRole!, userId => $u->id, role => 'member'}"
+                                                    data-url-parent="{link changeRole!, userId => $u->id, role => 'parent'}"
+                                                    data-url-leader="{link changeRole!, userId => $u->id, role => 'leader'}"
+                                                    data-name="{$u->first_name} {$u->last_name}">
+                                                    <button type="button" class="custom-select-trigger role-{$u->role}" onclick="toggleSelect(this)">
+                                                        <span>{if $u->role === 'member'}Člen{elseif $u->role === 'parent'}Rodič{else}Vedoucí{/if}</span>
+                                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                                    </button>
+                                                    <div class="custom-select-dropdown">
+                                                        <div class="custom-select-option {if $u->role === 'member'}selected{/if}" data-value="member" onclick="selectOption(this)">Člen</div>
+                                                        <div class="custom-select-option {if $u->role === 'parent'}selected{/if}" data-value="parent" onclick="selectOption(this)">Rodič</div>
+                                                        <div class="custom-select-option {if $u->role === 'leader'}selected{/if}" data-value="leader" onclick="selectOption(this)">Vedoucí</div>
+                                                    </div>
+                                            </div>
+                                        {/if}
                                     </td>
                                     <td data-label="Stav">
                                         {if $u->is_active}
@@ -103,22 +122,6 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                                 </svg>
                                             </a>
-                                            <div n:if="$u->role !== 'admin' && $u->id !== $currentUserId" class="custom-select"
-                                                    data-original="{$u->role}"
-                                                    data-url-member="{link changeRole!, userId => $u->id, role => 'member'}"
-                                                    data-url-parent="{link changeRole!, userId => $u->id, role => 'parent'}"
-                                                    data-url-leader="{link changeRole!, userId => $u->id, role => 'leader'}"
-                                                    data-name="{$u->first_name} {$u->last_name}">
-                                                    <button type="button" class="custom-select-trigger" onclick="toggleSelect(this)">
-                                                        <span>{if $u->role === 'member'}Člen{elseif $u->role === 'parent'}Rodič{else}Vedoucí{/if}</span>
-                                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                                                    </button>
-                                                    <div class="custom-select-dropdown">
-                                                        <div class="custom-select-option {if $u->role === 'member'}selected{/if}" data-value="member" onclick="selectOption(this)">Člen</div>
-                                                        <div class="custom-select-option {if $u->role === 'parent'}selected{/if}" data-value="parent" onclick="selectOption(this)">Rodič</div>
-                                                        <div class="custom-select-option {if $u->role === 'leader'}selected{/if}" data-value="leader" onclick="selectOption(this)">Vedoucí</div>
-                                                    </div>
-                                                </div>
                                                 <a n:if="$u->role !== 'admin' && $u->id !== $currentUserId"
                                                    n:href="toggleActive!, userId => $u->id"
                                                    class="admin-toggle-btn {if $u->is_active}admin-btn-deactivate{else}admin-btn-activate{/if}"

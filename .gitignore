@@ -35,6 +35,9 @@ nul
 .env
 .env.local
 
+# Local notes with dev credentials
+/testovaci-ucty.md
+
 # Patch work artifacts (applied to code directly later)
 *.patch
 /pathfinder-jk_changed-files/

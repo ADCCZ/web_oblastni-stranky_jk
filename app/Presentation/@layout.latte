@@ -21,6 +21,21 @@
 			--bg-secondary: #ffffff;
 			--text-primary: #1f2937;
 			--text-secondary: #4b5563;
+
+			/* Navbar + logo sizing (mobile default, 401px-1023px).
+			   --logo-final-top is DERIVED from these so the logo always stays
+			   vertically centered on the navbar bar, at every viewport width. */
+			--navbar-top-offset: 56px;
+			--navbar-h: 60px;
+			--logo-img: 100px;
+			--logo-ring-pad: 6px;
+			--logo-inner-pad: 4px;
+
+			/* Skutecny prumer loga (vc. ring/inner paddingu) a bezpecny zacatek
+			   obsahu stranky pod nim - POCITANO, ne odhadnuto, takze se page-content-top
+			   uz nikdy nerozejde s tim, kam logo skutecne saha (viz --logo-final-top). */
+			--logo-outer-d: calc(var(--logo-img) + 2 * var(--logo-ring-pad) + 2 * var(--logo-inner-pad));
+			--page-content-top: calc(var(--navbar-top-offset) + (var(--navbar-h) + var(--logo-outer-d)) / 2 + 24px);
 		}
 
 		.dark {
@@ -215,16 +230,11 @@
 
 		/* ===== NAVBAR INTRO ANIMACE ===== */
 
-		/* CSS proměnná pro cílovou pozici loga (sdílí keyframe i logo-final).
-		   Odvozeno z 7vw (stejný základ jako logo + navbar) aby škálovalo proporcionálně. */
+		/* Cílová pozice loga (sdílí keyframe i logo-final) - VŽDY dopočtena tak,
+		   aby střed loga (i s ring/inner paddingem) seděl přesně na střed navbaru,
+		   ať uz --navbar-h/--logo-img/paddingy padnou na cokoliv při resize. */
 		#logo-link {
-			--logo-final-top: clamp(8px, calc(7vw * 0.13), 16px);
-		}
-		#logo-link:not(.logo-inner) {
-			--logo-final-top: clamp(6px, calc(7vw * 0.13), 18px);
-		}
-		#logo-link.logo-inner {
-			--logo-final-top: clamp(10px, calc(7vw * 0.18), 24px);
+			--logo-final-top: calc(var(--navbar-top-offset) + (var(--navbar-h) - var(--logo-outer-d)) / 2);
 		}
 
 		/* Keyframes pro logo - sjede shora */
@@ -305,14 +315,14 @@
 		/* ===== USER BAR (přihlášen jako) ===== */
 		/*
 		 * Responzivní pozicování:
-		 * - top sleduje navbar (top 40px + výška navbaru + mezera)
+		 * - top sleduje navbar (--navbar-top-offset + výška navbaru + mezera)
 		 * - right sleduje navbar margin-right
 		 * - Skryto na mobilu (<1024px)
 		 */
 		.user-bar {
 			position: absolute;
 			display: none;
-			top: calc(40px + clamp(70px, 7vw, 90px) + 8px);
+			top: calc(var(--navbar-top-offset) + var(--navbar-h) + 8px);
 			right: clamp(16px, 2vw, 48px);
 			background: linear-gradient(135deg, #0075b5 0%, #005a8c 100%);
 			color: white;
@@ -535,35 +545,28 @@
 			margin-right: 16px !important;
 		}
 		#navbar > div:first-child {
-			height: 60px !important;
+			height: var(--navbar-h) !important;
 			padding-left: 16px !important;
 			padding-right: 16px !important;
 		}
 		#navbar-logo {
-			width: 100px !important;
-			height: 100px !important;
+			width: var(--logo-img) !important;
+			height: var(--logo-img) !important;
 		}
 		#logo-link .logo-ring {
-			padding: 6px;
+			padding: var(--logo-ring-pad);
 		}
 		#logo-link .logo-ring > div {
-			padding: 4px;
+			padding: var(--logo-inner-pad);
 		}
 
 		/* Responzivní logo pro malé obrazovky (250-400px) */
 		@media (max-width: 400px) {
-			#navbar-logo {
-				width: clamp(70px, 22vw, 100px) !important;
-				height: clamp(70px, 22vw, 100px) !important;
-			}
-			#logo-link .logo-ring {
-				padding: clamp(4px, 1.5vw, 6px);
-			}
-			#logo-link .logo-ring > div {
-				padding: clamp(3px, 1vw, 4px);
-			}
-			#navbar > div:first-child {
-				height: clamp(50px, 16vw, 60px) !important;
+			:root {
+				--navbar-h: clamp(50px, 16vw, 60px);
+				--logo-img: clamp(70px, 22vw, 100px);
+				--logo-ring-pad: clamp(4px, 1.5vw, 6px);
+				--logo-inner-pad: clamp(3px, 1vw, 4px);
 			}
 		}
 
@@ -726,20 +729,26 @@
 				margin-left: clamp(16px, 2vw, 48px) !important;
 				margin-right: clamp(16px, 2vw, 48px) !important;
 			}
+			:root {
+				--navbar-h: clamp(70px, 7vw, 90px);
+				--logo-img: clamp(100px, 7vw, 144px);
+				--logo-ring-pad: clamp(4px, 0.4vw, 8px);
+				--logo-inner-pad: clamp(3px, 0.3vw, 6px);
+			}
 			#navbar > div:first-child {
-				height: clamp(70px, 7vw, 90px) !important;
+				height: var(--navbar-h) !important;
 				padding-left: clamp(12px, 1.5vw, 40px) !important;
 				padding-right: clamp(12px, 1.5vw, 40px) !important;
 			}
 			#navbar-logo {
-				width: clamp(100px, 7vw, 144px) !important;
-				height: clamp(100px, 7vw, 144px) !important;
+				width: var(--logo-img) !important;
+				height: var(--logo-img) !important;
 			}
 			#logo-link .logo-ring {
-				padding: clamp(4px, 0.4vw, 8px);
+				padding: var(--logo-ring-pad);
 			}
 			#logo-link .logo-ring > div {
-				padding: clamp(3px, 0.3vw, 6px);
+				padding: var(--logo-inner-pad);
 			}
 			/* Responzivní text v navbaru */
 			.desktop-nav a {
@@ -1350,7 +1359,7 @@
 
 		.events-page-section {
 			padding: clamp(48px, 8vw, 96px) 0;
-			padding-top: calc(clamp(70px, 7vw, 90px) + 80px);
+			padding-top: var(--page-content-top);
 			min-height: 60vh;
 		}
 
@@ -1471,7 +1480,7 @@
 		/* ===== EVENT DETAIL PAGE ===== */
 
 		.event-detail-section {
-			padding-top: calc(clamp(70px, 7vw, 90px) + 80px);
+			padding-top: var(--page-content-top);
 			padding-bottom: clamp(32px, 6vw, 64px);
 			min-height: 60vh;
 		}
@@ -2361,7 +2370,7 @@
 
 		.toast-container {
 			position: fixed;
-			top: calc(40px + clamp(70px, 7vw, 90px) + 8px);
+			top: calc(var(--navbar-top-offset) + var(--navbar-h) + 8px);
 			left: clamp(16px, 2vw, 48px);
 			z-index: 9999;
 			display: flex;
@@ -2498,7 +2507,7 @@
 		/* Mobile: full width below navbar */
 		@media (max-width: 640px) {
 			.toast-container {
-				top: calc(40px + clamp(70px, 7vw, 90px) + 8px);
+				top: calc(var(--navbar-top-offset) + var(--navbar-h) + 8px);
 				bottom: auto;
 				left: 12px;
 				right: 12px;
@@ -3232,7 +3241,8 @@
 
 		/* ===== REGISTRATION FORM ===== */
 		.reg-form-section {
-			padding: clamp(100px, 12vw, 140px) 20px clamp(40px, 6vw, 80px);
+			padding: 0 20px clamp(40px, 6vw, 80px);
+			padding-top: var(--page-content-top);
 		}
 
 		.reg-form-container {
@@ -4765,7 +4775,8 @@
 		/* ===== PROFILE PAGE STYLES ===== */
 		.profile-section {
 			min-height: 100vh;
-			padding: clamp(140px, 15vw, 180px) clamp(16px, 4vw, 32px) clamp(48px, 6vw, 80px);
+			padding: 0 clamp(16px, 4vw, 32px) clamp(48px, 6vw, 80px);
+			padding-top: var(--page-content-top);
 			background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 		}
 
@@ -5917,7 +5928,8 @@
 		.admin-section {
 			min-height: calc(100vh - 80px);
 			background: var(--bg-primary);
-			padding: clamp(140px, 14vw, 180px) 0 clamp(40px, 5vw, 80px);
+			padding: 0 0 clamp(40px, 5vw, 80px);
+			padding-top: var(--page-content-top);
 		}
 
 
@@ -6201,6 +6213,31 @@
 			border-color: #0fa6db;
 		}
 
+		/* Barevné varianty triggeru podle role (stejné barvy jako .role-* štítek) */
+		.custom-select-trigger.role-member,
+		.custom-select-trigger.role-parent,
+		.custom-select-trigger.role-leader {
+			border: none;
+			border-radius: 20px;
+			color: white;
+		}
+		.custom-select-trigger.role-member { background: linear-gradient(135deg, #0075b5 0%, #005a8c 100%); }
+		.custom-select-trigger.role-parent { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+		.custom-select-trigger.role-leader { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+
+		.custom-select-trigger.role-member:hover,
+		.custom-select-trigger.role-parent:hover,
+		.custom-select-trigger.role-leader:hover {
+			filter: brightness(1.1);
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		}
+
+		.custom-select-trigger.role-member svg,
+		.custom-select-trigger.role-parent svg,
+		.custom-select-trigger.role-leader svg {
+			color: rgba(255, 255, 255, 0.85);
+		}
+
 		.custom-select-dropdown {
 			display: none;
 			position: absolute;
@@ -6270,6 +6307,7 @@
 			border-radius: 8px;
 			text-decoration: none;
 			transition: all 0.2s;
+			margin-left: auto;
 		}
 
 		.admin-btn-deactivate {
@@ -6588,10 +6626,10 @@
 				<div>
 					<h4 class="text-white font-semibold mb-4">Rychlé odkazy</h4>
 					<ul class="space-y-2">
-						<li><a n:href="Home:" class="text-gray-400 hover:text-white transition-colors">Domů</a></li>
-						<li><a n:href="Home:#akce" class="text-gray-400 hover:text-white transition-colors">Akce</a></li>
-						<li><a href="#" class="text-gray-400 hover:text-white transition-colors">O nás</a></li>
-						<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Kontakt</a></li>
+						<li><a n:href=":Home:default" class="text-gray-400 hover:text-white transition-colors">Domů</a></li>
+						<li><a n:href=":Event:default" class="text-gray-400 hover:text-white transition-colors">Akce</a></li>
+						<li><a n:href=":Placeholder:default, title => 'O nás'" class="text-gray-400 hover:text-white transition-colors">O nás</a></li>
+						<li><a n:href=":Placeholder:default, title => 'Kontakt'" class="text-gray-400 hover:text-white transition-colors">Kontakt</a></li>
 					</ul>
 				</div>
 

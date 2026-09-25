@@ -1,0 +1,163 @@
+{block content}
+
+<section class="placeholder-page-section">
+    <div class="placeholder-page-container">
+        <div class="placeholder-hammer-scene" aria-hidden="true">
+            <svg viewBox="0 0 200 200" class="placeholder-hammer-svg">
+                <ellipse cx="100" cy="182" rx="42" ry="7" class="placeholder-shadow"/>
+                <g class="placeholder-hammer-group">
+                    <rect x="64" y="60" width="12" height="95" rx="5" class="placeholder-hammer-handle"/>
+                    <rect x="38" y="32" width="64" height="30" rx="7" class="placeholder-hammer-head"/>
+                    <rect x="38" y="32" width="64" height="10" rx="5" class="placeholder-hammer-head-highlight"/>
+                </g>
+                <g class="placeholder-impact">
+                    <line x1="70" y1="150" x2="50" y2="138" />
+                    <line x1="70" y1="150" x2="90" y2="132" />
+                    <line x1="70" y1="150" x2="96" y2="152" />
+                </g>
+                <circle cx="70" cy="158" r="6" class="placeholder-nail"/>
+            </svg>
+        </div>
+
+        <p class="placeholder-eyebrow">PŘIPRAVUJEME</p>
+        <h1 n:block=title class="placeholder-title font-display">{$pageTitle} se ještě staví</h1>
+        <p class="placeholder-subtitle">Na téhle části webu právě pracujeme. Zkuste se prosím vrátit později.</p>
+
+        <a n:href="Home:default" class="placeholder-home-link">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Zpět na hlavní stránku
+        </a>
+    </div>
+</section>
+
+<style>
+    .placeholder-page-section {
+        position: relative;
+        z-index: 10;
+        padding-top: var(--page-content-top);
+        padding-bottom: clamp(48px, 8vw, 96px);
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+    }
+
+    .placeholder-page-container {
+        max-width: 560px;
+        margin: 0 auto;
+        padding: 0 clamp(16px, 4vw, 32px);
+        text-align: center;
+    }
+
+    .placeholder-hammer-scene {
+        width: clamp(140px, 22vw, 200px);
+        margin: 0 auto clamp(16px, 3vw, 24px);
+    }
+
+    .placeholder-hammer-svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+    }
+
+    .placeholder-shadow {
+        fill: #000;
+        opacity: 0.1;
+    }
+
+    .placeholder-hammer-group {
+        transform-origin: 70px 155px;
+        animation: hammerSwing 1.4s ease-in-out infinite;
+    }
+
+    .placeholder-hammer-handle {
+        fill: #a67c52;
+    }
+
+    .placeholder-hammer-head {
+        fill: #64748b;
+    }
+
+    .placeholder-hammer-head-highlight {
+        fill: #94a3b8;
+    }
+
+    .dark .placeholder-hammer-handle {
+        fill: #b8916a;
+    }
+
+    @keyframes hammerSwing {
+        0%   { transform: rotate(-38deg); }
+        35%  { transform: rotate(-38deg); }
+        50%  { transform: rotate(6deg); }
+        65%  { transform: rotate(-38deg); }
+        100% { transform: rotate(-38deg); }
+    }
+
+    .placeholder-nail {
+        fill: #1f2937;
+    }
+
+    .dark .placeholder-nail {
+        fill: #cbd5e1;
+    }
+
+    .placeholder-impact {
+        opacity: 0;
+        animation: impactFlash 1.4s ease-in-out infinite;
+    }
+
+    .placeholder-impact line {
+        stroke: #ffd600;
+        stroke-width: 3;
+        stroke-linecap: round;
+    }
+
+    @keyframes impactFlash {
+        0%, 44%   { opacity: 0; }
+        50%       { opacity: 1; }
+        60%, 100% { opacity: 0; }
+    }
+
+    .placeholder-eyebrow {
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        color: var(--primary, #0075b5);
+        margin-bottom: 8px;
+    }
+
+    .placeholder-title {
+        font-size: clamp(1.4rem, 3.5vw, 2rem);
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 12px;
+    }
+
+    .placeholder-subtitle {
+        color: var(--text-secondary);
+        font-size: clamp(0.9rem, 1.5vw, 1rem);
+        line-height: 1.6;
+        margin-bottom: clamp(24px, 4vw, 32px);
+    }
+
+    .placeholder-home-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 28px;
+        background: linear-gradient(135deg, #0075b5 0%, #005a8c 100%);
+        color: white;
+        font-weight: 600;
+        border-radius: 12px;
+        text-decoration: none;
+        box-shadow: 0 4px 14px rgba(0, 117, 181, 0.3);
+        transition: all 0.2s ease;
+    }
+
+    .placeholder-home-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0, 117, 181, 0.4);
+    }
+</style>

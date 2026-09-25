@@ -1,8 +1,169 @@
 {block content}
-<h1 n:block=title>Page Not Found</h1>
 
-<p>The page you requested could not be found. It is possible that the address is
-incorrect, or that the page no longer exists. Please use a search engine to find
-what you are looking for.</p>
+<section class="error-page-section">
+    <div class="error-page-container">
+        <div class="error-compass" aria-hidden="true">
+            <svg viewBox="0 0 200 200" class="error-compass-svg">
+                <circle cx="100" cy="100" r="94" class="error-compass-rim"/>
+                <circle cx="100" cy="100" r="80" class="error-compass-face"/>
+                <g class="error-compass-ticks">
+                    <line x1="100" y1="24" x2="100" y2="36"/>
+                    <line x1="100" y1="164" x2="100" y2="176"/>
+                    <line x1="24" y1="100" x2="36" y2="100"/>
+                    <line x1="164" y1="100" x2="176" y2="100"/>
+                </g>
+                <text x="100" y="52" class="error-compass-label">N</text>
+                <text x="100" y="158" class="error-compass-label">S</text>
+                <text x="42" y="105" class="error-compass-label">W</text>
+                <text x="158" y="105" class="error-compass-label">E</text>
+                <g class="error-compass-needle">
+                    <polygon points="100,40 108,100 100,108 92,100" class="error-compass-needle-north"/>
+                    <polygon points="100,160 108,100 100,92 92,100" class="error-compass-needle-south"/>
+                </g>
+                <circle cx="100" cy="100" r="7" class="error-compass-pin"/>
+            </svg>
+        </div>
 
-<p><small>error 404</small></p>
+        <p class="error-code">404</p>
+        <h1 n:block=title class="error-title font-display">Zdá se, že jste sešli ze stezky</h1>
+        <p class="error-subtitle">Tahle stopa nikam nevede - stránka, kterou hledáte, tu není, byla přesunuta, nebo nikdy neexistovala.</p>
+
+        <a href="{$basePath}/" class="error-home-link">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            Zpět na hlavní stránku
+        </a>
+    </div>
+</section>
+
+<style>
+    .error-page-section {
+        position: relative;
+        z-index: 10;
+        padding-top: var(--page-content-top);
+        padding-bottom: clamp(48px, 8vw, 96px);
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+    }
+
+    .error-page-container {
+        max-width: 560px;
+        margin: 0 auto;
+        padding: 0 clamp(16px, 4vw, 32px);
+        text-align: center;
+    }
+
+    .error-compass {
+        width: clamp(140px, 22vw, 200px);
+        margin: 0 auto clamp(24px, 4vw, 40px);
+    }
+
+    .error-compass-svg {
+        width: 100%;
+        height: 100%;
+        filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15));
+    }
+
+    .error-compass-rim {
+        fill: #ffd600;
+        stroke: #e6c200;
+        stroke-width: 3;
+    }
+
+    .error-compass-face {
+        fill: white;
+        stroke: #e5e7eb;
+        stroke-width: 1;
+    }
+
+    .dark .error-compass-face {
+        fill: #1e293b;
+        stroke: #334155;
+    }
+
+    .error-compass-ticks line {
+        stroke: #94a3b8;
+        stroke-width: 2;
+    }
+
+    .error-compass-label {
+        font-size: 14px;
+        font-weight: 700;
+        fill: #64748b;
+        text-anchor: middle;
+        font-family: inherit;
+    }
+
+    .error-compass-needle {
+        transform-origin: 100px 100px;
+        animation: compassSearch 3.5s ease-in-out infinite;
+    }
+
+    .error-compass-needle-north {
+        fill: #dc2626;
+    }
+
+    .error-compass-needle-south {
+        fill: #94a3b8;
+    }
+
+    .error-compass-pin {
+        fill: #1f2937;
+    }
+
+    .dark .error-compass-pin {
+        fill: #e2e8f0;
+    }
+
+    @keyframes compassSearch {
+        0%   { transform: rotate(0deg); }
+        20%  { transform: rotate(35deg); }
+        40%  { transform: rotate(-25deg); }
+        60%  { transform: rotate(15deg); }
+        80%  { transform: rotate(-10deg); }
+        100% { transform: rotate(0deg); }
+    }
+
+    .error-code {
+        font-size: clamp(2rem, 6vw, 3rem);
+        font-weight: 800;
+        color: var(--primary, #0075b5);
+        letter-spacing: 0.05em;
+        margin-bottom: 4px;
+    }
+
+    .error-title {
+        font-size: clamp(1.4rem, 3.5vw, 2rem);
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 12px;
+    }
+
+    .error-subtitle {
+        color: var(--text-secondary);
+        font-size: clamp(0.9rem, 1.5vw, 1rem);
+        line-height: 1.6;
+        margin-bottom: clamp(24px, 4vw, 32px);
+    }
+
+    .error-home-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 28px;
+        background: linear-gradient(135deg, #0075b5 0%, #005a8c 100%);
+        color: white;
+        font-weight: 600;
+        border-radius: 12px;
+        text-decoration: none;
+        box-shadow: 0 4px 14px rgba(0, 117, 181, 0.3);
+        transition: all 0.2s ease;
+    }
+
+    .error-home-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0, 117, 181, 0.4);
+    }
+</style>

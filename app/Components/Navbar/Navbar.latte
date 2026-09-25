@@ -1,7 +1,7 @@
 {* Navbar Component *}
 
 {* Logo - samostatný fixed element pro animaci *}
-<a href="{plink Home:}" id="logo-link" class="group logo-animate {if !$isHomepage}logo-inner{/if}">
+<a href="{$presenter->link(':Home:default')}" id="logo-link" class="group logo-animate {if !$isHomepage}logo-inner{/if}">
     <div class="logo-ring rounded-full transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-2xl {if $isHomepage}bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-500{else}bg-gradient-to-br from-gray-200 via-gray-100 to-gray-200 dark:from-gray-600 dark:via-gray-700 dark:to-gray-600{/if}">
         <div class="bg-white dark:bg-gray-800 rounded-full">
             <img
@@ -15,7 +15,7 @@
 </a>
 
 {* Navbar wrapper - absolutně pozicovaný přes obsah *}
-<div id="navbar-wrapper" class="absolute left-0 right-0 z-50" style="top: 40px;">
+<div id="navbar-wrapper" class="absolute left-0 right-0 z-50" style="top: var(--navbar-top-offset);">
     <nav id="navbar" class="rounded-2xl relative overflow-visible navbar-start">
         {* VÝŠKA NAVBARU - řízeno CSS *}
         <div class="flex justify-between items-center">
@@ -23,19 +23,19 @@
             {* Desktop: Left navigation links *}
             {* Použití: n:class="'nav-font ...', $presenter->isLinkCurrent('Presenter:action') ? 'nav-link-active'" *}
             <div class="desktop-nav items-center">
-                <a href="{plink Event:default}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold', $presenter->isLinkCurrent('Event:*') ? 'nav-link-active'">
+                <a href="{$presenter->link(':Event:default')}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold', $presenter->isLinkCurrent(':Event:*') ? 'nav-link-active'">
                     AKCE
                 </a>
-                <a href="#" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                <a href="{$presenter->link(':Placeholder:default', ['title' => 'Aktuality'])}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
                     AKTUALITY
                 </a>
-                <a href="#" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                <a href="{$presenter->link(':Placeholder:default', ['title' => 'Oddíly'])}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
                     ODDÍLY
                 </a>
-                <a href="#" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                <a href="{$presenter->link(':Placeholder:default', ['title' => 'Galerie'])}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
                     GALERIE
                 </a>
-                <a href="#" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                <a href="{$presenter->link(':Placeholder:default', ['title' => 'Historie'])}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
                     HISTORIE
                 </a>
             </div>
@@ -45,13 +45,13 @@
 
             {* Desktop: Right navigation links *}
             <div class="desktop-nav desktop-nav-right items-center">
-                <a href="#" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                <a href="{$presenter->link(':Placeholder:default', ['title' => 'O nás'])}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
                     O NÁS
                 </a>
-                <a href="#" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                <a href="{$presenter->link(':Placeholder:default', ['title' => 'Odkazy'])}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
                     ODKAZY
                 </a>
-                <a href="#" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                <a href="{$presenter->link(':Placeholder:default', ['title' => 'Kontakt'])}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
                     KONTAKT
                 </a>
             </div>
@@ -65,15 +65,15 @@
 
                 {if $user->isLoggedIn()}
                     {* Profil *}
-                    <a href="{plink Profile:}" class="nav-icon-btn bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-all duration-300" title="Profil">
+                    <a href="{$presenter->link(':Profile:default')}" class="nav-icon-btn bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-all duration-300" title="Profil">
                         <i data-lucide="user" class="w-6 h-6"></i>
                     </a>
                     {* Odhlásit *}
-                    <a href="{plink Sign:out}" class="nav-icon-btn nav-logout-btn bg-gray-100 text-gray-700 rounded-xl transition-all duration-300" title="Odhlásit se">
+                    <a href="{$presenter->link(':Sign:out')}" class="nav-icon-btn nav-logout-btn bg-gray-100 text-gray-700 rounded-xl transition-all duration-300" title="Odhlásit se">
                         <i data-lucide="log-out" class="w-6 h-6"></i>
                     </a>
                 {else}
-                    <a href="{plink Sign:in}" class="nav-font nav-btn text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300" style="background-color: #005a8c;">
+                    <a href="{$presenter->link(':Sign:in')}" class="nav-font nav-btn text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300" style="background-color: #005a8c;">
                         PŘIHLÁSIT
                     </a>
                 {/if}
@@ -90,14 +90,14 @@
         {* Použití: n:class="'nav-font mobile-link', $presenter->isLinkCurrent('Presenter:action') ? 'mobile-link-active'" *}
         <div id="mobile-menu" class="mobile-menu-closed">
             <div class="mobile-menu-links">
-                <a href="{plink Event:default}" n:class="'nav-font mobile-link', $presenter->isLinkCurrent('Event:*') ? 'mobile-link-active'">AKCE</a>
-                <a href="#" n:class="'nav-font mobile-link'">AKTUALITY</a>
-                <a href="#" n:class="'nav-font mobile-link'">ODDÍLY</a>
-                <a href="#" n:class="'nav-font mobile-link'">GALERIE</a>
-                <a href="#" n:class="'nav-font mobile-link'">HISTORIE</a>
-                <a href="#" n:class="'nav-font mobile-link'">O NÁS</a>
-                <a href="#" n:class="'nav-font mobile-link'">ODKAZY</a>
-                <a href="#" n:class="'nav-font mobile-link'">KONTAKT</a>
+                <a href="{$presenter->link(':Event:default')}" n:class="'nav-font mobile-link', $presenter->isLinkCurrent(':Event:*') ? 'mobile-link-active'">AKCE</a>
+                <a href="{$presenter->link(':Placeholder:default', ['title' => 'Aktuality'])}" n:class="'nav-font mobile-link'">AKTUALITY</a>
+                <a href="{$presenter->link(':Placeholder:default', ['title' => 'Oddíly'])}" n:class="'nav-font mobile-link'">ODDÍLY</a>
+                <a href="{$presenter->link(':Placeholder:default', ['title' => 'Galerie'])}" n:class="'nav-font mobile-link'">GALERIE</a>
+                <a href="{$presenter->link(':Placeholder:default', ['title' => 'Historie'])}" n:class="'nav-font mobile-link'">HISTORIE</a>
+                <a href="{$presenter->link(':Placeholder:default', ['title' => 'O nás'])}" n:class="'nav-font mobile-link'">O NÁS</a>
+                <a href="{$presenter->link(':Placeholder:default', ['title' => 'Odkazy'])}" n:class="'nav-font mobile-link'">ODKAZY</a>
+                <a href="{$presenter->link(':Placeholder:default', ['title' => 'Kontakt'])}" n:class="'nav-font mobile-link'">KONTAKT</a>
 
                 <div class="mobile-menu-footer">
                     <button type="button" class="toggle-switch" onclick="toggleDarkMode()">
@@ -107,16 +107,16 @@
                     {if $user->isLoggedIn()}
                         <div class="flex gap-3">
                             {* Profil *}
-                            <a href="{plink Profile:}" class="mobile-icon-btn bg-gray-200 hover:bg-gray-300 text-gray-700" title="Profil">
+                            <a href="{$presenter->link(':Profile:default')}" class="mobile-icon-btn bg-gray-200 hover:bg-gray-300 text-gray-700" title="Profil">
                                 <i data-lucide="user" class="w-6 h-6"></i>
                             </a>
                             {* Odhlásit *}
-                            <a href="{plink Sign:out}" class="mobile-icon-btn bg-red-100 hover:bg-red-200 text-red-600" title="Odhlásit se">
+                            <a href="{$presenter->link(':Sign:out')}" class="mobile-icon-btn bg-red-100 hover:bg-red-200 text-red-600" title="Odhlásit se">
                                 <i data-lucide="log-out" class="w-6 h-6"></i>
                             </a>
                         </div>
                     {else}
-                        <a href="{plink Sign:in}" class="nav-font mobile-btn mobile-btn-primary">PŘIHLÁSIT</a>
+                        <a href="{$presenter->link(':Sign:in')}" class="nav-font mobile-btn mobile-btn-primary">PŘIHLÁSIT</a>
                     {/if}
                 </div>
 

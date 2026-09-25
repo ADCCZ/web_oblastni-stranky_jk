@@ -60,6 +60,14 @@ final class EventRepository
             ->fetch();
     }
 
+    /** Same as findBySlug() but also returns unpublished drafts - for slug-uniqueness checks and owner/admin preview. */
+    public function findBySlugIncludingUnpublished(string $slug): ?ActiveRow
+    {
+        return $this->database->table('events')
+            ->where('slug', $slug)
+            ->fetch();
+    }
+
     public function findByCategory(int $categoryId): Selection
     {
         return $this->database->table('events')

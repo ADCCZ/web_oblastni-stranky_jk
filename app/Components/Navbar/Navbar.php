@@ -20,7 +20,7 @@ final class Navbar extends Control
         $this->template->user = $this->getPresenter()->getUser();
         $this->template->basePath = $this->getPresenter()->template->basePath;
         $this->template->presenter = $this->getPresenter();
-        $this->template->isHomepage = $this->getPresenter()->isLinkCurrent('Home:default');
+        $this->template->isHomepage = $this->getPresenter()->isLinkCurrent(':Home:default');
 
         // Get display name and role for logged-in user
         $displayName = null;
