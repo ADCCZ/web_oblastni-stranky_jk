@@ -4,18 +4,19 @@
     <div class="placeholder-page-container">
         <div class="placeholder-hammer-scene" aria-hidden="true">
             <svg viewBox="0 0 200 200" class="placeholder-hammer-svg">
-                <ellipse cx="100" cy="182" rx="42" ry="7" class="placeholder-shadow"/>
+                <rect x="97" y="148" width="6" height="24" rx="1" class="placeholder-nail-shaft"/>
+                <rect x="50" y="160" width="100" height="22" rx="3" class="placeholder-wood"/>
+                <ellipse cx="100" cy="148" rx="8" ry="4" class="placeholder-nail"/>
                 <g class="placeholder-hammer-group">
-                    <rect x="64" y="60" width="12" height="95" rx="5" class="placeholder-hammer-handle"/>
-                    <rect x="38" y="32" width="64" height="30" rx="7" class="placeholder-hammer-head"/>
-                    <rect x="38" y="32" width="64" height="10" rx="5" class="placeholder-hammer-head-highlight"/>
+                    <rect x="120" y="4" width="12" height="85" rx="5" class="placeholder-hammer-handle"/>
+                    <rect x="94" y="76" width="64" height="28" rx="7" class="placeholder-hammer-head"/>
+                    <rect x="94" y="76" width="64" height="10" rx="5" class="placeholder-hammer-head-highlight"/>
                 </g>
                 <g class="placeholder-impact">
-                    <line x1="70" y1="150" x2="50" y2="138" />
-                    <line x1="70" y1="150" x2="90" y2="132" />
-                    <line x1="70" y1="150" x2="96" y2="152" />
+                    <line x1="100" y1="146" x2="80" y2="132" />
+                    <line x1="100" y1="146" x2="100" y2="124" />
+                    <line x1="100" y1="146" x2="120" y2="132" />
                 </g>
-                <circle cx="70" cy="158" r="6" class="placeholder-nail"/>
             </svg>
         </div>
 
@@ -37,22 +38,23 @@
         position: relative;
         z-index: 10;
         padding-top: var(--page-content-top);
-        padding-bottom: clamp(48px, 8vw, 96px);
-        min-height: 70vh;
+        padding-bottom: var(--page-content-top);
+        min-height: 100vh;
+        box-sizing: border-box;
         display: flex;
         align-items: center;
     }
 
     .placeholder-page-container {
-        max-width: 560px;
+        max-width: 680px;
         margin: 0 auto;
         padding: 0 clamp(16px, 4vw, 32px);
         text-align: center;
     }
 
     .placeholder-hammer-scene {
-        width: clamp(140px, 22vw, 200px);
-        margin: 0 auto clamp(16px, 3vw, 24px);
+        width: clamp(200px, 32vw, 320px);
+        margin: 0 auto clamp(16px, 3vw, 32px);
     }
 
     .placeholder-hammer-svg {
@@ -61,13 +63,26 @@
         overflow: visible;
     }
 
-    .placeholder-shadow {
-        fill: #000;
-        opacity: 0.1;
+    .placeholder-wood {
+        fill: #b5834a;
+        stroke: #8a5f30;
+        stroke-width: 2;
     }
 
+    .dark .placeholder-wood {
+        fill: #8a5f30;
+        stroke: #6b4823;
+    }
+
+    /* Osa otáčení je ukotvená přesně na konci rukojeti (její horní hrana,
+       střed x) - "rect x=120 y=4 width=12" u .placeholder-hammer-handle
+       níž → konec rukojeti = (120+12/2, 4) = (126, 4). Kladivo (rukojeť+
+       hlava jako g.placeholder-hammer-group) se otáčí kolem tohohle bodu;
+       pozici/posun (kam se má kladivo v klidu/na konci švihu vykreslit)
+       lze měnit úpravou x/y u handle+head+head-highlight rectů výš, beze
+       změny téhle osy. */
     .placeholder-hammer-group {
-        transform-origin: 70px 155px;
+        transform-origin: 126px 4px;
         animation: hammerSwing 1.4s ease-in-out infinite;
     }
 
@@ -87,24 +102,30 @@
         fill: #b8916a;
     }
 
+    /* Časování podle skutečného mlácení: rychlý úder dolů (zrychlení paže +
+       zápěstí), pak pomalejší, kontrolované zvednutí zpět - ne stejně
+       rychlé oběma směry, jak to bylo dřív. */
     @keyframes hammerSwing {
-        0%   { transform: rotate(-38deg); }
-        35%  { transform: rotate(-38deg); }
-        50%  { transform: rotate(6deg); }
-        65%  { transform: rotate(-38deg); }
-        100% { transform: rotate(-38deg); }
+        0%   { transform: rotate(0deg); }
+        38%  { transform: rotate(0deg); }
+        46%  { transform: rotate(90deg); }
+        50%  { transform: rotate(90deg); }
+        100% { transform: rotate(0deg); }
     }
 
-    .placeholder-nail {
-        fill: #1f2937;
+    .placeholder-nail,
+    .placeholder-nail-shaft {
+        fill: #6b7280;
     }
 
-    .dark .placeholder-nail {
+    .dark .placeholder-nail,
+    .dark .placeholder-nail-shaft {
         fill: #cbd5e1;
     }
 
     .placeholder-impact {
         opacity: 0;
+        transform-origin: 100px 146px;
         animation: impactFlash 1.4s ease-in-out infinite;
     }
 
@@ -115,41 +136,43 @@
     }
 
     @keyframes impactFlash {
-        0%, 44%   { opacity: 0; }
-        50%       { opacity: 1; }
-        60%, 100% { opacity: 0; }
+        0%, 42%   { opacity: 0; transform: scale(0.3); }
+        46%       { opacity: 1; transform: scale(1); }
+        58%       { opacity: 0; transform: scale(1.7); }
+        100%      { opacity: 0; transform: scale(1.7); }
     }
 
     .placeholder-eyebrow {
-        font-size: 0.8rem;
+        font-size: clamp(0.85rem, 1.2vw, 1rem);
         font-weight: 700;
         letter-spacing: 0.15em;
         color: var(--primary, #0075b5);
-        margin-bottom: 8px;
+        margin-bottom: 12px;
     }
 
     .placeholder-title {
-        font-size: clamp(1.4rem, 3.5vw, 2rem);
+        font-size: clamp(1.8rem, 4.5vw, 2.75rem);
         font-weight: 700;
         color: var(--text-primary);
-        margin-bottom: 12px;
+        margin-bottom: 16px;
     }
 
     .placeholder-subtitle {
         color: var(--text-secondary);
-        font-size: clamp(0.9rem, 1.5vw, 1rem);
+        font-size: clamp(1rem, 1.8vw, 1.25rem);
         line-height: 1.6;
-        margin-bottom: clamp(24px, 4vw, 32px);
+        margin-bottom: clamp(28px, 4vw, 40px);
     }
 
     .placeholder-home-link {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 12px 28px;
+        gap: 10px;
+        padding: clamp(12px, 1.6vw, 16px) clamp(28px, 3vw, 36px);
         background: linear-gradient(135deg, #0075b5 0%, #005a8c 100%);
         color: white;
         font-weight: 600;
+        font-size: clamp(1rem, 1.4vw, 1.15rem);
         border-radius: 12px;
         text-decoration: none;
         box-shadow: 0 4px 14px rgba(0, 117, 181, 0.3);

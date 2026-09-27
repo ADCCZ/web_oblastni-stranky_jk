@@ -22,7 +22,7 @@
 
             {* Desktop: Left navigation links *}
             {* Použití: n:class="'nav-font ...', $presenter->isLinkCurrent('Presenter:action') ? 'nav-link-active'" *}
-            <div class="desktop-nav items-center">
+            <div class="desktop-nav desktop-nav-left items-center">
                 <a href="{$presenter->link(':Event:default')}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold', $presenter->isLinkCurrent(':Event:*') ? 'nav-link-active'">
                     AKCE
                 </a>
@@ -43,40 +43,48 @@
             {* Desktop: Spacer for logo *}
             <div class="desktop-nav logo-spacer"></div>
 
-            {* Desktop: Right navigation links *}
-            <div class="desktop-nav desktop-nav-right items-center">
-                <a href="{$presenter->link(':Placeholder:default', ['title' => 'O nás'])}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
-                    O NÁS
-                </a>
-                <a href="{$presenter->link(':Placeholder:default', ['title' => 'Odkazy'])}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
-                    ODKAZY
-                </a>
-                <a href="{$presenter->link(':Placeholder:default', ['title' => 'Kontakt'])}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
-                    KONTAKT
-                </a>
-            </div>
+            {* Pravá polovina navbaru - odkazy + akce (toggle/login) společně, aby dostaly
+               stejný podíl místa jako levá skupina a logo tak vyšlo přesně na střed
+               (bez ohledu na to, jak si tahle polovina místo uvnitř rozdělí). *}
+            <div class="desktop-nav navbar-right-group items-center">
+                {* Desktop: Right navigation links *}
+                <div class="desktop-nav desktop-nav-right items-center">
+                    <a href="{$presenter->link(':Placeholder:default', ['title' => 'Dokumenty'])}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                        DOKUMENTY
+                    </a>
+                    <a href="{$presenter->link(':Placeholder:default', ['title' => 'O nás'])}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                        O NÁS
+                    </a>
+                    <a href="{$presenter->link(':Placeholder:default', ['title' => 'Odkazy'])}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                        ODKAZY
+                    </a>
+                    <a href="{$presenter->link(':Placeholder:default', ['title' => 'Kontakt'])}" n:class="'nav-font text-gray-700 hover:text-primary transition-colors duration-300 font-semibold'">
+                        KONTAKT
+                    </a>
+                </div>
 
-            {* Desktop: Far right - Dark mode toggle + Login *}
-            <div class="desktop-nav desktop-nav-actions items-center">
-                <button type="button" class="toggle-switch" onclick="toggleDarkMode()" title="Přepnout tmavý režim">
-                    <i data-lucide="sun" class="icon-sun text-yellow-500"></i>
-                    <i data-lucide="moon" class="icon-moon text-blue-200"></i>
-                </button>
+                {* Desktop: Far right - Dark mode toggle + Login *}
+                <div class="desktop-nav desktop-nav-actions items-center">
+                    <button type="button" class="toggle-switch" onclick="toggleDarkMode()" title="Přepnout tmavý režim">
+                        <i data-lucide="sun" class="icon-sun text-yellow-500"></i>
+                        <i data-lucide="moon" class="icon-moon text-blue-200"></i>
+                    </button>
 
-                {if $user->isLoggedIn()}
-                    {* Profil *}
-                    <a href="{$presenter->link(':Profile:default')}" class="nav-icon-btn bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-all duration-300" title="Profil">
-                        <i data-lucide="user" class="w-6 h-6"></i>
-                    </a>
-                    {* Odhlásit *}
-                    <a href="{$presenter->link(':Sign:out')}" class="nav-icon-btn nav-logout-btn bg-gray-100 text-gray-700 rounded-xl transition-all duration-300" title="Odhlásit se">
-                        <i data-lucide="log-out" class="w-6 h-6"></i>
-                    </a>
-                {else}
-                    <a href="{$presenter->link(':Sign:in')}" class="nav-font nav-btn text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300" style="background-color: #005a8c;">
-                        PŘIHLÁSIT
-                    </a>
-                {/if}
+                    {if $user->isLoggedIn()}
+                        {* Profil *}
+                        <a href="{$presenter->link(':Profile:default')}" class="nav-icon-btn bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-all duration-300" title="Profil">
+                            <i data-lucide="user" class="w-6 h-6"></i>
+                        </a>
+                        {* Odhlásit *}
+                        <a href="{$presenter->link(':Sign:out')}" class="nav-icon-btn nav-logout-btn bg-gray-100 text-gray-700 rounded-xl transition-all duration-300" title="Odhlásit se">
+                            <i data-lucide="log-out" class="w-6 h-6"></i>
+                        </a>
+                    {else}
+                        <a href="{$presenter->link(':Sign:in')}" class="nav-font nav-btn text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300" style="background-color: #005a8c;">
+                            PŘIHLÁSIT
+                        </a>
+                    {/if}
+                </div>
             </div>
 
             {* Mobile: Hamburger menu button *}
@@ -95,6 +103,7 @@
                 <a href="{$presenter->link(':Placeholder:default', ['title' => 'Oddíly'])}" n:class="'nav-font mobile-link'">ODDÍLY</a>
                 <a href="{$presenter->link(':Placeholder:default', ['title' => 'Galerie'])}" n:class="'nav-font mobile-link'">GALERIE</a>
                 <a href="{$presenter->link(':Placeholder:default', ['title' => 'Historie'])}" n:class="'nav-font mobile-link'">HISTORIE</a>
+                <a href="{$presenter->link(':Placeholder:default', ['title' => 'Dokumenty'])}" n:class="'nav-font mobile-link'">DOKUMENTY</a>
                 <a href="{$presenter->link(':Placeholder:default', ['title' => 'O nás'])}" n:class="'nav-font mobile-link'">O NÁS</a>
                 <a href="{$presenter->link(':Placeholder:default', ['title' => 'Odkazy'])}" n:class="'nav-font mobile-link'">ODKAZY</a>
                 <a href="{$presenter->link(':Placeholder:default', ['title' => 'Kontakt'])}" n:class="'nav-font mobile-link'">KONTAKT</a>

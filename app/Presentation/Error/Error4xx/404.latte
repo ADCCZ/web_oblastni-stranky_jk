@@ -42,22 +42,23 @@
         position: relative;
         z-index: 10;
         padding-top: var(--page-content-top);
-        padding-bottom: clamp(48px, 8vw, 96px);
-        min-height: 70vh;
+        padding-bottom: var(--page-content-top);
+        min-height: 100vh;
+        box-sizing: border-box;
         display: flex;
         align-items: center;
     }
 
     .error-page-container {
-        max-width: 560px;
+        max-width: 680px;
         margin: 0 auto;
         padding: 0 clamp(16px, 4vw, 32px);
         text-align: center;
     }
 
     .error-compass {
-        width: clamp(140px, 22vw, 200px);
-        margin: 0 auto clamp(24px, 4vw, 40px);
+        width: clamp(200px, 32vw, 320px);
+        margin: 0 auto clamp(28px, 4vw, 48px);
     }
 
     .error-compass-svg {
@@ -127,35 +128,36 @@
     }
 
     .error-code {
-        font-size: clamp(2rem, 6vw, 3rem);
+        font-size: clamp(2.5rem, 7vw, 3.75rem);
         font-weight: 800;
         color: var(--primary, #0075b5);
         letter-spacing: 0.05em;
-        margin-bottom: 4px;
+        margin-bottom: 8px;
     }
 
     .error-title {
-        font-size: clamp(1.4rem, 3.5vw, 2rem);
+        font-size: clamp(1.8rem, 4.5vw, 2.75rem);
         font-weight: 700;
         color: var(--text-primary);
-        margin-bottom: 12px;
+        margin-bottom: 16px;
     }
 
     .error-subtitle {
         color: var(--text-secondary);
-        font-size: clamp(0.9rem, 1.5vw, 1rem);
+        font-size: clamp(1rem, 1.8vw, 1.25rem);
         line-height: 1.6;
-        margin-bottom: clamp(24px, 4vw, 32px);
+        margin-bottom: clamp(28px, 4vw, 40px);
     }
 
     .error-home-link {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 12px 28px;
+        gap: 10px;
+        padding: clamp(12px, 1.6vw, 16px) clamp(28px, 3vw, 36px);
         background: linear-gradient(135deg, #0075b5 0%, #005a8c 100%);
         color: white;
         font-weight: 600;
+        font-size: clamp(1rem, 1.4vw, 1.15rem);
         border-radius: 12px;
         text-decoration: none;
         box-shadow: 0 4px 14px rgba(0, 117, 181, 0.3);

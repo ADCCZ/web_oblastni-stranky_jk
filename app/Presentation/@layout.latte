@@ -22,11 +22,17 @@
 			--text-primary: #1f2937;
 			--text-secondary: #4b5563;
 
-			/* Navbar + logo sizing (mobile default, 401px-1023px).
-			   --logo-final-top is DERIVED from these so the logo always stays
-			   vertically centered on the navbar bar, at every viewport width. */
+			/* Navbar + logo sizing (mobile default, cca 401px+, dokud to
+			   nepřebije užší @media(max-width:400px) pravidlo pod tím, nebo
+			   širší desktopové @media(min-width:...) pravidlo dál v souboru).
+			   --navbar-h byl dřív pevných 60px přes celý tenhle rozsah (žádná
+			   plynulost) - nahrazeno clamp(), který plynule roste a končí
+			   přesně na 90px tam, kde ho pak přebírá desktopové pravidlo
+			   (viz jeho komentář), takže na přechodu není vidět skok.
+			   --logo-final-top je DERIVED z těchhle proměnných, takže logo
+			   zůstává svisle vystředěné na navbaru při jakékoliv šířce. */
 			--navbar-top-offset: 56px;
-			--navbar-h: 60px;
+			--navbar-h: clamp(58px, 6.6vw, 90px);
 			--logo-img: 100px;
 			--logo-ring-pad: 6px;
 			--logo-inner-pad: 4px;
@@ -337,8 +343,9 @@
 			transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
 		}
 
-		/* Zobraz jen na desktopu */
-		@media (min-width: 1024px) {
+		/* Zobraz jen na desktopu - stejná hranice jako přepnutí navbaru
+		   (viz vysvětlení u ".desktop-nav" o kus níž). */
+		@media (min-width: 1360px) {
 			.user-bar {
 				display: block;
 			}
@@ -718,7 +725,14 @@
 			}
 		}
 
-		@media (min-width: 1024px) {
+		/* Hranice přepnutí na desktop menu je 1360px, ne "klasických" 1024px -
+		   ověřeno testem (vložený iframe přesné šířky): s 9 odkazy + toggle +
+		   tlačítkem přihlásit se pod ~1300px odkazy/tlačítka reálně
+		   PŘEKRÝVALA s logem (ne jen "těsně vedle sebe"), i po zmenšení
+		   všech fontů/mezer na rozumné minimum. Pod touto hranicí je
+		   hamburger mobilní menu, které funguje spolehlivě při jakékoliv
+		   šířce - bezpečnější než zobrazit rozbitý desktop layout. */
+		@media (min-width: 1360px) {
 			.desktop-nav {
 				display: flex;
 			}
@@ -750,64 +764,138 @@
 			#logo-link .logo-ring > div {
 				padding: var(--logo-inner-pad);
 			}
-			/* Responzivní text v navbaru */
+			/* Responzivní text v navbaru. POZOR: koeficient u "vw" je schválně
+			   nižší, než by "vypadalo logicky" - při 1.75vw dosahoval font
+			   maxima (1.85rem) už kolem 1700px šířky, takže od 1700px výš
+			   zůstával nadále úplně stejně velký, zatímco 9 odkazů + toggle +
+			   tlačítko potřebují víc místa - na běžných monitorech (1366-1920px)
+			   se pak text/tlačítka reálně PŘEKRÝVALA s logem (ověřeno přes
+			   testovací iframe). Koeficient 1.3vw posouvá "strop" až ke ~2300px,
+			   takže do té doby text dál plynule zmenšuje, čímž se na běžných
+			   šířkách uvolní dost místa navíc. Stejný princip (pozdější strop)
+			   je aplikovaný i na gap/toggle/tlačítko níž. */
 			.desktop-nav a {
-				font-size: clamp(0.75rem, 1.3vw, 1.875rem) !important;
+				font-size: clamp(0.95rem, 1.3vw, 1.85rem) !important;
 				white-space: nowrap;
 			}
-			/* Responzivní mezery mezi odkazy */
+			/* Mezery mezi odkazy. */
 			.desktop-nav {
-				gap: clamp(10px, 3.7vw, 140px) !important;
+				gap: clamp(10px, 1.22vw, 28px) !important;
+				flex-shrink: 0;
 			}
-			/* Odsazení levých odkazů od okraje */
-			.desktop-nav:first-of-type {
-				margin-left: clamp(10px, 1.5vw, 30px) !important;
+			/* Levá skupina odkazů se roztáhne přes prostor od okraje k logu.
+			   POZOR: odsazení od kraje/loga NESMÍ být padding přímo na tomhle
+			   flex:1 1 0 prvku - zjištěno (změřeno JS), že padding na
+			   flex-basis:0 prvku rozbíjí rovnoměrné dělení místa mezi
+			   .desktop-nav-left a .navbar-right-group (jeden pak vyjde širší
+			   než druhý, i když mají identické flex-grow/shrink/basis).
+			   Proto je container čistě "flex:1 1 0" bez paddingu a odsazení
+			   od kraje/loga řeší margin na prvním/posledním odkazu níž. */
+			.desktop-nav-left {
+				flex: 1 1 0;
+				justify-content: space-between;
+				min-width: 0;
 			}
-			/* Logo spacer */
+			/* Menší margin než u ostatních krajů - "#navbar > div:first-child" uz
+			   ma vlastni padding-left (clamp(12px,1.5vw,40px)), takze by se s
+			   timhle marginem scitaly a levy kraj (u AKCE) by pak byl vetsi
+			   nez odsazeni od loga na druhem konci teto skupiny. */
+			/* Zaoblený levý roh navbaru opticky "ujídá" z okraje, takže i při
+			   stejné naměřené šířce mezery vypadá levý kraj menší než
+			   odsazení od loga - proto tu je o něco víc marginu navíc, aby to
+			   opticky (ne jen matematicky) vycházelo stejně. */
+			.desktop-nav-left > a:first-child {
+				margin-left: clamp(16px, 1vw, 28px);
+			}
+			.desktop-nav-left > a:last-child {
+				margin-right: clamp(12px, 1.4vw, 33px);
+			}
+			/* Pravá polovina (odkazy + toggle/login DOHROMADY) dostane stejný podíl
+			   místa jako levá skupina - logo je přesně uprostřed navbaru, takže
+			   levý a pravý prostor od něj je stejně velký. Také bez přímého
+			   paddingu na flex:1 1 0 prvku, ze stejného důvodu jako výše. */
+			.navbar-right-group {
+				flex: 1 1 0;
+				min-width: 0;
+			}
+			/* Odkazy uvnitř pravé poloviny se rozprostřou od loga až k akční sekci;
+			   odsazení od loga i před přepínačem řeší margin na krajních odkazech,
+			   ne padding na containeru (viz vysvětlení výše). */
+			.desktop-nav-right {
+				flex: 1 1 0;
+				justify-content: space-between;
+				min-width: 0;
+			}
+			.desktop-nav-right > a:first-child {
+				margin-left: clamp(12px, 1.4vw, 33px);
+			}
+			/* Bez extra margin-right na posledním odkazu (KONTAKT) - ".navbar-right-group"
+			   uz ma vlastni "gap" (ze tridy .desktop-nav) k dalsimu sourozenci
+			   (.desktop-nav-actions), takze margin by se s nim jen scital a
+			   udelal by mezeru pred prepinacem zbytecne velkou. */
+			/* Logo spacer - rezervuje misto pro logo uprostred, nesmi se zmenšit */
 			.logo-spacer {
 				width: clamp(80px, 8vw, 200px) !important;
+				flex-shrink: 0;
 			}
 			/* Logo spacer center - místo pro fixed logo uprostřed */
 			.logo-spacer-center {
 				width: 140px;
 				flex-shrink: 0;
 			}
-			/* Pravá strana odkazů - margin od loga a menší gap */
-			.desktop-nav-right {
-				margin-left: clamp(70px, 8vw, 150px) !important;
-				gap: clamp(10px, 3vw, 250px) !important;
-				margin-right: clamp(5px, 1.1vw, 100px) !important;
-			}
-			/* Akce sekce - gap mezi toggle a tlačítkem */
+			/* Akce sekce - gap mezi toggle a tlačítkem, nesmí se zmenšit */
 			.desktop-nav-actions {
-				gap: clamp(5px, 1.1vw, 100px) !important;
+				gap: clamp(6px, 1vw, 20px) !important;
+				flex-shrink: 0;
 			}
-			/* Responzivní toggle switch */
+			/* Responzivní toggle switch - plynulé škálování přes clamp() místo
+			   dřívějších 2 pevných "transform: scale()" zlomů při 1200/1400px
+			   (skokové, ne responzivní - proto viditelné cukání při resize).
+			   Stejně jako u textu odkazů výš - koeficienty posunuté tak, aby
+			   strop (max hodnota) přišel až kolem ~2300px, ne už kolem 1800px,
+			   jinak na běžných monitorech (1366-1920px) chybělo místo a
+			   přepínač/tlačítko se reálně překrývaly s odkazy (ověřeno). */
+			:root {
+				--toggle-w: clamp(44px, 4.35vw, 100px);
+				--toggle-h: clamp(24px, 2.35vw, 54px);
+				--toggle-knob: clamp(18px, 1.91vw, 44px);
+				--toggle-pad: clamp(2px, 0.22vw, 5px);
+			}
 			.desktop-nav-actions .toggle-switch {
-				transform: scale(1);
-				transform-origin: center;
+				width: var(--toggle-w) !important;
+				height: var(--toggle-h) !important;
+				border-radius: 9999px !important;
+			}
+			.desktop-nav-actions .toggle-switch::before {
+				width: var(--toggle-knob) !important;
+				height: var(--toggle-knob) !important;
+				top: var(--toggle-pad) !important;
+				left: var(--toggle-pad) !important;
+			}
+			.dark .desktop-nav-actions .toggle-switch::before {
+				transform: translateX(calc(var(--toggle-w) - var(--toggle-knob) - 2 * var(--toggle-pad))) !important;
+			}
+			.desktop-nav-actions .toggle-switch .icon-sun,
+			.desktop-nav-actions .toggle-switch .icon-moon {
+				width: clamp(12px, 1.22vw, 28px) !important;
+				height: clamp(12px, 1.22vw, 28px) !important;
+			}
+			.desktop-nav-actions .toggle-switch .icon-sun {
+				left: clamp(5px, 0.57vw, 13px) !important;
+			}
+			.desktop-nav-actions .toggle-switch .icon-moon {
+				right: clamp(5px, 0.57vw, 13px) !important;
 			}
 		}
 
-		/* Menší toggle a tlačítko na užších obrazovkách */
-		@media (min-width: 1024px) and (max-width: 1400px) {
-			.desktop-nav-actions .toggle-switch {
-				transform: scale(0.75);
-			}
-		}
-
-		@media (min-width: 1024px) and (max-width: 1200px) {
-			.desktop-nav-actions .toggle-switch {
-				transform: scale(0.65);
-			}
-		}
-
-		/* Tlačítko přihlásit/odhlásit - vždy na desktopu */
-		@media (min-width: 1024px) {
+		/* Tlačítko přihlásit/odhlásit - vždy na desktopu (stejná hranice
+		   1360px jako zbytek desktop navbaru výš). Stejný "pozdější strop"
+		   princip jako výš, ať se na běžných šířkách reálně zmenší. */
+		@media (min-width: 1360px) {
 			.nav-btn {
-				font-size: clamp(0.65rem, 0.9vw, 1.5rem) !important;
-				padding: clamp(4px, 0.5vw, 12px) clamp(8px, 1vw, 32px) !important;
-				margin-right: clamp(4px, 0.5vw, 20px) !important;
+				font-size: clamp(0.5rem, 0.65vw, 1.5rem) !important;
+				padding: clamp(3px, 0.36vw, 12px) clamp(6px, 0.72vw, 32px) !important;
+				margin-right: clamp(4px, 0.36vw, 20px) !important;
 			}
 		}
 
@@ -1082,6 +1170,48 @@
 			.watermark-logo-pf {
 				bottom: -100px;
 				left: -100px;
+			}
+		}
+
+		/* Patička - fancy pozadí (gradientový pruh nahoře + velké průhledné logo v rohu) */
+		.footer-fancy {
+			overflow: hidden;
+		}
+
+		.footer-top-accent {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 4px;
+			background: linear-gradient(90deg, #0075b5, #ffd600, #009043, #0075b5);
+			background-size: 200% 100%;
+			animation: footerAccentShift 8s linear infinite;
+		}
+
+		@keyframes footerAccentShift {
+			0%   { background-position: 0% 0; }
+			100% { background-position: 200% 0; }
+		}
+
+		.footer-watermark {
+			position: absolute;
+			bottom: -100px;
+			right: -60px;
+			width: 380px;
+			height: 380px;
+			object-fit: contain;
+			opacity: 0.06;
+			transform: rotate(-12deg);
+			pointer-events: none;
+		}
+
+		@media (max-width: 640px) {
+			.footer-watermark {
+				width: 240px;
+				height: 240px;
+				bottom: -60px;
+				right: -50px;
 			}
 		}
 
@@ -6603,8 +6733,10 @@
 
 	{* Footer - hidden on Sign and Password pages *}
 	{if $presenter->getName() !== 'Sign' && $presenter->getName() !== 'Password'}
-	<footer class="bg-gray-900 text-gray-300 relative" style="z-index: 10;">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+	<footer class="bg-gray-900 text-gray-300 relative footer-fancy" style="z-index: 10;">
+		<div class="footer-top-accent" aria-hidden="true"></div>
+		<img src="{$basePath}/images/pathfinder-logo.png" alt="" class="footer-watermark" aria-hidden="true">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative" style="z-index: 1;">
 			<div class="grid md:grid-cols-3 gap-8">
 				<div>
 					<div class="flex items-center space-x-3 mb-4">
