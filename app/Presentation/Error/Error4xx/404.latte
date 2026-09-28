@@ -4,8 +4,47 @@
     <div class="error-page-container">
         <div class="error-compass" aria-hidden="true">
             <svg viewBox="0 0 200 200" class="error-compass-svg">
+                <defs>
+                    <radialGradient id="ec-rim-grad" cx="35%" cy="30%" r="75%">
+                        <stop offset="0%" stop-color="#fff2a8"/>
+                        <stop offset="45%" stop-color="#ffd600"/>
+                        <stop offset="100%" stop-color="#c99e00"/>
+                    </radialGradient>
+                    <radialGradient id="ec-face-grad" cx="38%" cy="32%" r="75%">
+                        <stop offset="0%" stop-color="#ffffff"/>
+                        <stop offset="75%" stop-color="#f3f5f8"/>
+                        <stop offset="100%" stop-color="#dfe4ea"/>
+                    </radialGradient>
+                    <radialGradient id="ec-pin-grad" cx="35%" cy="30%" r="70%">
+                        <stop offset="0%" stop-color="#6b7280"/>
+                        <stop offset="55%" stop-color="#1f2937"/>
+                        <stop offset="100%" stop-color="#0b0f16"/>
+                    </radialGradient>
+                </defs>
                 <circle cx="100" cy="100" r="94" class="error-compass-rim"/>
                 <circle cx="100" cy="100" r="80" class="error-compass-face"/>
+                <g class="error-compass-ticks-minor">
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(15 100 100)"/>
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(30 100 100)"/>
+                    <line x1="100" y1="68" x2="100" y2="76" transform="rotate(45 100 100)"/>
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(60 100 100)"/>
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(75 100 100)"/>
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(105 100 100)"/>
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(120 100 100)"/>
+                    <line x1="100" y1="68" x2="100" y2="76" transform="rotate(135 100 100)"/>
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(150 100 100)"/>
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(165 100 100)"/>
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(195 100 100)"/>
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(210 100 100)"/>
+                    <line x1="100" y1="68" x2="100" y2="76" transform="rotate(225 100 100)"/>
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(240 100 100)"/>
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(255 100 100)"/>
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(285 100 100)"/>
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(300 100 100)"/>
+                    <line x1="100" y1="68" x2="100" y2="76" transform="rotate(315 100 100)"/>
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(330 100 100)"/>
+                    <line x1="100" y1="72" x2="100" y2="76" transform="rotate(345 100 100)"/>
+                </g>
                 <g class="error-compass-ticks">
                     <line x1="100" y1="24" x2="100" y2="36"/>
                     <line x1="100" y1="164" x2="100" y2="176"/>
@@ -13,12 +52,13 @@
                     <line x1="164" y1="100" x2="176" y2="100"/>
                 </g>
                 <text x="100" y="52" class="error-compass-label">N</text>
-                <text x="100" y="158" class="error-compass-label">S</text>
+                <text x="100" y="158" class="error-compass-label error-compass-label-south">S</text>
                 <text x="42" y="105" class="error-compass-label">W</text>
                 <text x="158" y="105" class="error-compass-label">E</text>
                 <g class="error-compass-needle">
                     <polygon points="100,40 108,100 100,108 92,100" class="error-compass-needle-north"/>
                     <polygon points="100,160 108,100 100,92 92,100" class="error-compass-needle-south"/>
+                    <line x1="100" y1="44" x2="100" y2="100" class="error-compass-needle-shine"/>
                 </g>
                 <circle cx="100" cy="100" r="7" class="error-compass-pin"/>
             </svg>
@@ -57,8 +97,8 @@
     }
 
     .error-compass {
-        width: clamp(200px, 32vw, 320px);
-        margin: 0 auto clamp(28px, 4vw, 48px);
+        width: clamp(140px, 20vw, 210px);
+        margin: 0 auto clamp(24px, 3.5vw, 40px);
     }
 
     .error-compass-svg {
@@ -68,14 +108,14 @@
     }
 
     .error-compass-rim {
-        fill: #ffd600;
-        stroke: #e6c200;
-        stroke-width: 3;
+        fill: url(#ec-rim-grad);
+        stroke: #a67c00;
+        stroke-width: 2;
     }
 
     .error-compass-face {
-        fill: white;
-        stroke: #e5e7eb;
+        fill: url(#ec-face-grad);
+        stroke: #d3d8de;
         stroke-width: 1;
     }
 
@@ -85,8 +125,17 @@
     }
 
     .error-compass-ticks line {
-        stroke: #94a3b8;
+        stroke: #64748b;
         stroke-width: 2;
+    }
+
+    .error-compass-ticks-minor line {
+        stroke: #9aa7b6;
+        stroke-width: 1;
+    }
+
+    .dark .error-compass-ticks-minor line {
+        stroke: #475569;
     }
 
     .error-compass-label {
@@ -97,6 +146,13 @@
         font-family: inherit;
     }
 
+    /* Jižní Kříž - jih je "domovský" směr, proto S vystupuje víc než ostatní
+       světové strany (a jehla se v animaci níž vždy vrací právě k němu). */
+    .error-compass-label-south {
+        fill: var(--primary, #0075b5);
+        font-size: 16px;
+    }
+
     .error-compass-needle {
         transform-origin: 100px 100px;
         animation: compassSearch 3.5s ease-in-out infinite;
@@ -104,27 +160,43 @@
 
     .error-compass-needle-north {
         fill: #dc2626;
+        stroke: #9f1c1c;
+        stroke-width: 0.5;
     }
 
     .error-compass-needle-south {
         fill: #94a3b8;
+        stroke: #64748b;
+        stroke-width: 0.5;
+    }
+
+    .error-compass-needle-shine {
+        stroke: #ffffff;
+        stroke-width: 1;
+        opacity: 0.5;
     }
 
     .error-compass-pin {
-        fill: #1f2937;
+        fill: url(#ec-pin-grad);
+        stroke: #000000;
+        stroke-width: 0.5;
     }
 
     .dark .error-compass-pin {
         fill: #e2e8f0;
+        stroke: none;
     }
 
+    /* Jehla bloudí, ale vždy se vrátí k jihu (180° = červený hrot dole na
+       "S") místo k severu - Jižní Kříž, tak ať se aspoň kompas vždycky umí
+       trefit domů. */
     @keyframes compassSearch {
-        0%   { transform: rotate(0deg); }
-        20%  { transform: rotate(35deg); }
-        40%  { transform: rotate(-25deg); }
-        60%  { transform: rotate(15deg); }
-        80%  { transform: rotate(-10deg); }
-        100% { transform: rotate(0deg); }
+        0%   { transform: rotate(180deg); }
+        20%  { transform: rotate(215deg); }
+        40%  { transform: rotate(155deg); }
+        60%  { transform: rotate(195deg); }
+        80%  { transform: rotate(170deg); }
+        100% { transform: rotate(180deg); }
     }
 
     .error-code {
