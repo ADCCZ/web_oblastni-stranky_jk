@@ -345,7 +345,7 @@
 
 		/* Zobraz jen na desktopu - stejná hranice jako přepnutí navbaru
 		   (viz vysvětlení u ".desktop-nav" o kus níž). */
-		@media (min-width: 1360px) {
+		@media (min-width: 1024px) {
 			.user-bar {
 				display: block;
 			}
@@ -610,7 +610,12 @@
 			display: flex;
 			flex-direction: column;
 			gap: 4px;
-			padding-top: 16px;
+			/* Logo je samostatný fixed prvek, který přesahuje POD navbar
+			   (viz --logo-outer-d vs --navbar-h) - běžných 16px nahoře proto
+			   nestačí a první odkaz ("AKCE") se schovával pod logo. Přidaný
+			   "max(0px, ...)" dopočítá přesně tolik navíc, o kolik logo
+			   přesahuje výšku navbaru, ať je vždy celé nad prvním odkazem. */
+			padding-top: calc(16px + max(0px, (var(--logo-outer-d) - var(--navbar-h)) / 2));
 			align-items: center;
 		}
 
@@ -725,14 +730,11 @@
 			}
 		}
 
-		/* Hranice přepnutí na desktop menu je 1360px, ne "klasických" 1024px -
-		   ověřeno testem (vložený iframe přesné šířky): s 9 odkazy + toggle +
-		   tlačítkem přihlásit se pod ~1300px odkazy/tlačítka reálně
-		   PŘEKRÝVALA s logem (ne jen "těsně vedle sebe"), i po zmenšení
-		   všech fontů/mezer na rozumné minimum. Pod touto hranicí je
-		   hamburger mobilní menu, které funguje spolehlivě při jakékoliv
-		   šířce - bezpečnější než zobrazit rozbitý desktop layout. */
-		@media (min-width: 1360px) {
+		/* Hranice přepnutí na desktop menu je zpět na 1024px - hodnoty
+		   fontu/mezer/toggle/tlačítka níž jsou doladěné tak, aby se 9 odkazů
+		   + toggle + tlačítko přihlásit vešly i přesně na 1024px šířky bez
+		   překryvu s logem (ověřeno testem přes vložený iframe). */
+		@media (min-width: 1024px) {
 			.desktop-nav {
 				display: flex;
 			}
@@ -743,16 +745,25 @@
 				margin-left: clamp(16px, 2vw, 48px) !important;
 				margin-right: clamp(16px, 2vw, 48px) !important;
 			}
+			/* --nav-gap = JEDINÁ hodnota pro VŠECHNY vodorovné mezery v navbaru
+			   (okraj navbaru <-> první/poslední odkaz, mezi odkazy navzájem,
+			   odkaz <-> logo, KONTAKT <-> přepínač, přepínač <-> tlačítko).
+			   Dřív měl každý z těchto typů mezer vlastní nezávislý clamp(),
+			   takže se lišily (okraj byl citelně větší než mezera u loga,
+			   které se navíc lišily mezi levou a pravou půlkou) - nahlášeno
+			   uživatelem jako "okraje odkazů nejsou stejné". Jedna sdílená
+			   proměnná to zaručuje strukturálně, ne jen naladěním čísel. */
 			:root {
 				--navbar-h: clamp(70px, 7vw, 90px);
 				--logo-img: clamp(100px, 7vw, 144px);
 				--logo-ring-pad: clamp(4px, 0.4vw, 8px);
 				--logo-inner-pad: clamp(3px, 0.3vw, 6px);
+				--nav-gap: clamp(8px, 1.1vw, 26px);
 			}
 			#navbar > div:first-child {
 				height: var(--navbar-h) !important;
-				padding-left: clamp(12px, 1.5vw, 40px) !important;
-				padding-right: clamp(12px, 1.5vw, 40px) !important;
+				padding-left: var(--nav-gap) !important;
+				padding-right: var(--nav-gap) !important;
 			}
 			#navbar-logo {
 				width: var(--logo-img) !important;
@@ -774,13 +785,18 @@
 			   takže do té doby text dál plynule zmenšuje, čímž se na běžných
 			   šířkách uvolní dost místa navíc. Stejný princip (pozdější strop)
 			   je aplikovaný i na gap/toggle/tlačítko níž. */
+			/* Spodní hranice snížena z 0.88rem na 0.8rem - těsně nad hranicí
+			   1024px byla spodní hranice (0.88rem) skutečně použitá hodnota
+			   (1.3vw tam vychází menší), a 9 odkazů + čitelně velký toggle/
+			   tlačítko (viz níž) se tam už nevešly bez přesahu do sebe
+			   (nahlášeno uživatelem - "odkazy za logem"/přesah u toggle). */
 			.desktop-nav a {
-				font-size: clamp(0.95rem, 1.3vw, 1.85rem) !important;
+				font-size: clamp(0.8rem, 1.3vw, 1.85rem) !important;
 				white-space: nowrap;
 			}
-			/* Mezery mezi odkazy. */
+			/* Mezery mezi odkazy - sdílené var(--nav-gap), viz komentář výš. */
 			.desktop-nav {
-				gap: clamp(10px, 1.22vw, 28px) !important;
+				gap: var(--nav-gap) !important;
 				flex-shrink: 0;
 			}
 			/* Levá skupina odkazů se roztáhne přes prostor od okraje k logu.
@@ -796,19 +812,14 @@
 				justify-content: space-between;
 				min-width: 0;
 			}
-			/* Menší margin než u ostatních krajů - "#navbar > div:first-child" uz
-			   ma vlastni padding-left (clamp(12px,1.5vw,40px)), takze by se s
-			   timhle marginem scitaly a levy kraj (u AKCE) by pak byl vetsi
-			   nez odsazeni od loga na druhem konci teto skupiny. */
-			/* Zaoblený levý roh navbaru opticky "ujídá" z okraje, takže i při
-			   stejné naměřené šířce mezery vypadá levý kraj menší než
-			   odsazení od loga - proto tu je o něco víc marginu navíc, aby to
-			   opticky (ne jen matematicky) vycházelo stejně. */
+			/* Žádný extra margin - "#navbar > div:first-child" už má
+			   padding-left: var(--nav-gap), to samo dává okraj navbar<->AKCE
+			   přesně stejný jako všechny ostatní mezery (viz --nav-gap výš). */
 			.desktop-nav-left > a:first-child {
-				margin-left: clamp(16px, 1vw, 28px);
+				margin-left: 0;
 			}
 			.desktop-nav-left > a:last-child {
-				margin-right: clamp(12px, 1.4vw, 33px);
+				margin-right: var(--nav-gap);
 			}
 			/* Pravá polovina (odkazy + toggle/login DOHROMADY) dostane stejný podíl
 			   místa jako levá skupina - logo je přesně uprostřed navbaru, takže
@@ -827,15 +838,23 @@
 				min-width: 0;
 			}
 			.desktop-nav-right > a:first-child {
-				margin-left: clamp(12px, 1.4vw, 33px);
+				margin-left: var(--nav-gap);
 			}
 			/* Bez extra margin-right na posledním odkazu (KONTAKT) - ".navbar-right-group"
 			   uz ma vlastni "gap" (ze tridy .desktop-nav) k dalsimu sourozenci
 			   (.desktop-nav-actions), takze margin by se s nim jen scital a
 			   udelal by mezeru pred prepinacem zbytecne velkou. */
-			/* Logo spacer - rezervuje misto pro logo uprostred, nesmi se zmenšit */
+			/* Logo spacer - rezervuje misto pro logo uprostred, nesmi se zmenšit.
+			   POZOR: šířka MUSÍ sedět s reálným průměrem loga (--logo-outer-d),
+			   ne s nezávislým clamp() odhadem - ten byl u hranice 1024px (a až
+			   do ~1515px) užší než skutečné logo (100px + ring/inner padding),
+			   takže logo (position:absolute, vycentrované na střed stránky)
+			   fyzicky přesahovalo přes okraje spaceru a překrývalo sousední
+			   odkazy. --logo-outer-d se přepočítává společně s --logo-img/
+			   ring-pad/inner-pad výš, takže tímhle je spacer vždy přesně tak
+			   široký jako logo samotné, bez ohledu na šířku okna. */
 			.logo-spacer {
-				width: clamp(80px, 8vw, 200px) !important;
+				width: var(--logo-outer-d) !important;
 				flex-shrink: 0;
 			}
 			/* Logo spacer center - místo pro fixed logo uprostřed */
@@ -843,9 +862,10 @@
 				width: 140px;
 				flex-shrink: 0;
 			}
-			/* Akce sekce - gap mezi toggle a tlačítkem, nesmí se zmenšit */
+			/* Akce sekce - gap mezi toggle a tlačítkem, nesmí se zmenšit.
+			   Bez vlastní hodnoty - dědí var(--nav-gap) z obecného ".desktop-nav"
+			   pravidla výš (i tento kontejner má třídu "desktop-nav"). */
 			.desktop-nav-actions {
-				gap: clamp(6px, 1vw, 20px) !important;
 				flex-shrink: 0;
 			}
 			/* Responzivní toggle switch - plynulé škálování přes clamp() místo
@@ -856,9 +876,9 @@
 			   jinak na běžných monitorech (1366-1920px) chybělo místo a
 			   přepínač/tlačítko se reálně překrývaly s odkazy (ověřeno). */
 			:root {
-				--toggle-w: clamp(44px, 4.35vw, 100px);
-				--toggle-h: clamp(24px, 2.35vw, 54px);
-				--toggle-knob: clamp(18px, 1.91vw, 44px);
+				--toggle-w: clamp(38px, 4.35vw, 100px);
+				--toggle-h: clamp(21px, 2.35vw, 54px);
+				--toggle-knob: clamp(16px, 1.91vw, 44px);
 				--toggle-pad: clamp(2px, 0.22vw, 5px);
 			}
 			.desktop-nav-actions .toggle-switch {
@@ -889,13 +909,32 @@
 		}
 
 		/* Tlačítko přihlásit/odhlásit - vždy na desktopu (stejná hranice
-		   1360px jako zbytek desktop navbaru výš). Stejný "pozdější strop"
-		   princip jako výš, ať se na běžných šířkách reálně zmenší. */
-		@media (min-width: 1360px) {
+		   1024px jako zbytek desktop navbaru výš).
+		   POZOR: výška je natvrdo svázaná s var(--toggle-h) (stejná proměnná
+		   jako u přepínače tmavého režimu kousek výš), takže tlačítko a
+		   přepínač mají vždy VIZUÁLNĚ STEJNOU výšku bez ohledu na šířku okna
+		   - dřív si výšku tlačítka "domýšlel" font-size + padding nezávisle
+		   na přepínači, takže se rozjížděly. Font má teď vlastní, mnohem
+		   rozumnější spodní hranici (0.8rem = 12.8px místo dřívějších
+		   0.5rem = 8px, které byly na běžných šířkách 1024-1400px prakticky
+		   nečitelné - nahlášeno uživatelem). Svislé centrování textu řeší
+		   flex misto paddingu, takže padding je jen vodorovný. */
+		@media (min-width: 1024px) {
 			.nav-btn {
-				font-size: clamp(0.5rem, 0.65vw, 1.5rem) !important;
-				padding: clamp(3px, 0.36vw, 12px) clamp(6px, 0.72vw, 32px) !important;
-				margin-right: clamp(4px, 0.36vw, 20px) !important;
+				display: inline-flex !important;
+				align-items: center !important;
+				justify-content: center !important;
+				height: var(--toggle-h) !important;
+				font-size: clamp(0.8rem, 0.75vw, 1.15rem) !important;
+				/* Spodní hranice paddingu snížena z 12px na 8px - těsně nad
+				   1024px chybělo pár px místa a tlačítko/toggle se pak
+				   překrývaly s posledním odkazem (KONTAKT). Font-size (čitelnost)
+				   tím není dotčen, jen vodorovné odsazení textu v tlačítku. */
+				padding: 0 clamp(8px, 1.1vw, 28px) !important;
+				/* Žádný extra margin - "#navbar > div:first-child" už má
+				   padding-right: var(--nav-gap) (viz komentář u AKCE), to samo
+				   dává pravý okraj navbaru<->tlačítko stejný jako levý. */
+				margin-right: 0 !important;
 			}
 		}
 
